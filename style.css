@@ -25,13 +25,12 @@ body{
 }
 .wrap{max-width:var(--max);margin:0 auto;padding:22px}
 .nav{position:sticky;top:0;background:linear-gradient(180deg, rgba(14,14,16,.9), rgba(14,14,16,0.6));backdrop-filter: blur(6px);z-index:10;border-bottom:1px solid #1e1e22}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700}
+.brand{color:#ddd;text-decoration:none;font-weight:700}
 .nav .links a{color:var(--muted);text-decoration:none;margin-left:18px}
 .nav .links a.cta{color:#fff;padding:8px 12px;border-radius:999px;background:linear-gradient(135deg, #b5835a, #8a5d3e)}
 
 .hero{padding:60px 0 20px;border-bottom:1px solid #1e1e22}
-.hero h1{font-family:var(--serif);font-size:42px;line-height:1.2;margin:0 0 10px}
-.hero h1 span{color:var(--muted);font-weight:400}
+.hero h1{font-family:var(--serif);font-size:48px;line-height:1.2;margin:0 0 10px}
 .lead{color:var(--muted);margin-bottom:16px}
 .buttons .btn{display:inline-block;margin-right:10px;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700;color:#111;background:var(--ink)}
 .buttons .btn.ghost{background:#222;color:#fff}
@@ -54,7 +53,7 @@ blockquote{margin:8px 0 0 0;padding-left:14px;border-left:3px solid #333;color:v
 .footer a{color:#cdb6a2;text-decoration:none}
 
 @media(min-width:860px){
-  .hero h1{font-size:56px}
+  .hero h1{font-size:60px}
   .grid{grid-template-columns:repeat(3,1fr)}
   #about{grid-column: span 2;}
   #subscribe{grid-column: span 1;}
