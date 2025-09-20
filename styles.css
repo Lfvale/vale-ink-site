@@ -291,3 +291,14 @@ details[open] summary { opacity: 0.9; }
   .postit { max-width: 100%; }
   details { padding: 10px; }
 }
+details summary {
+  list-style: none;        /* remove default arrow */
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+  position: relative;
+}
+
+details summary::-webkit-details-marker {
+  display: none;           /* remove arrow in Chrome/Safari */
+}
