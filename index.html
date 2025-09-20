@@ -1,33 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L. F. Vale</title>
-  <style>
-    body {
-      background: #0d0d0d;
-      color: #f5f5f5;
-      font-family: Georgia, serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-    }
-    p {
-      font-size: 1.2em;
-      opacity: 0.8;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>L. F. Vale — Words that unsettle</title>
+  <meta name="description" content="L. F. Vale — monologues, parables, and fiction for the sleepless." />
+  <meta property="og:title" content="L. F. Vale — Words that unsettle" />
+  <meta property="og:description" content="Monologues and microfiction to wake you from autopilot." />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=L.F.+Vale" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>L. F. Vale</h1>
-  <p>Coming soon...</p>
+  <div class="grain"></div>
+
+  <header class="hero">
+    <div class="ink">
+      <svg viewBox="0 0 200 200" width="420" height="420" aria-hidden="true">
+        <defs>
+          <radialGradient id="g" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(0,0,0,0.9)" />
+            <stop offset="100%" stop-color="rgba(0,0,0,0)" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="60" fill="url(#g)" />
+      </svg>
+    </div>
+
+    <div class="container">
+      <h1 class="reveal"><span>L. F. Vale</span></h1>
+      <p class="tag reveal delay-1">Words that unsettle. <span class="muted">Stories that wake you up.</span></p>
+      <nav class="cta reveal delay-2">
+        <a href="#read" class="btn">Read</a>
+        <a href="#listen" class="btn ghost">Listen</a>
+        <a href="#subscribe" class="btn outline">Subscribe</a>
+      </nav>
+      <div class="scroll-hint reveal delay-3">Scroll</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="read" class="card">
+      <h2 class="underline">Latest</h2>
+      <article class="excerpt">
+        <p><em>The first piece of cake is tradition; the first tear is instinct. Both mean love.</em></p>
+        <p class="small">Full monologue and audio coming soon.</p>
+      </article>
+    </section>
+
+    <section class="card two-col" id="about">
+      <div>
+        <h2 class="underline">About</h2>
+        <p>I write to wake people from autopilot — short monologues and strange parables that prick at the ordinary.
+        Buddhism, humor, and a little darkness. If you want the jolt, subscribe below.</p>
+      </div>
+      <div class="quote">
+        <p>“Funny how the Devil never sells; he just offers what you already wanted.”</p>
+      </div>
+    </section>
+
+    <section id="listen" class="card">
+      <h2 class="underline">Listen</h2>
+      <p class="small">I record the pieces as 60–90s voice notes. The first drop goes to subscribers.</p>
+    </section>
+
+    <section id="subscribe" class="card subscribe">
+      <h2 class="underline">Subscribe</h2>
+      <p class="small">Get a free PDF of short monologues + the first audio file (MP3). No spam.</p>
+      <!-- replace YOUR_FORM_ID with your Formspree endpoint like /f/abcd1234 -->
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="form">
+        <input name="email" type="email" placeholder="you@domain.com" required>
+        <button type="submit" class="btn">Join</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <p>© <span id="y"></span> L. F. Vale — <a href="https://instagram.com/vale.ink" target="_blank" rel="noopener">Instagram</a></p>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    });
+  </script>
 </body>
 </html>
