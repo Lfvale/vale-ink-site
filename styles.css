@@ -201,3 +201,93 @@ blockquote{
   .legal-box{ max-width:100%; font-size:.9rem }
   .scribble{ font-size:1.1rem }
 }
+/* ===== Legal page: styling for /legal ===== */
+
+.legal-wrap { max-width: 920px; margin: 36px auto; padding: 0 20px 80px; }
+h1.legal-title { font-size: 32px; line-height: 1.2; margin: 0 0 6px; }
+
+/* Dense body text for boilerplate blocks */
+.dense { font-size: 0.95rem; line-height: 1.65; color: #444; }
+.dense a { color: var(--accent, #2f6158); }
+
+/* Collapsible sections */
+details { margin: 14px 0; padding: 12px; border-radius: 8px; background: rgba(0,0,0,0.03); }
+details summary { font-weight: 600; cursor: pointer; padding: 6px 0; list-style: none; }
+details[open] summary { opacity: 0.9; }
+
+/* The required, visible legal block (keep plain & readable) */
+.required-box {
+  font-family: "Courier New", Courier, monospace;   /* deliberately boring */
+  font-size: 0.9rem;
+  line-height: 1.6;
+  background: #efefef;
+  color: #222;
+  border: 1px solid #d2d2d2;
+  border-radius: 6px;
+  padding: 12px 14px;
+  max-width: 520px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+}
+.required-box a {
+  color: #0645ad;                /* old-school link blue */
+  text-decoration: underline;
+}
+.required-box a:visited { color: #551A8B; }  /* vintage purple visited */
+
+/* “Boring” grey legal paragraphs (extra filler blocks) */
+.boring {
+  font-family: "Courier New", Courier, monospace;
+  background: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 14px;
+}
+
+/* Handwritten sticky notes (post-its) */
+.postit-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0; }
+.postit, .scribble.sticky {
+  position: relative;
+  background: #fff8a6;                  /* sticky note yellow */
+  border: 1px solid #eadf8f;
+  border-radius: 9px;
+  padding: 8px 12px;
+  box-shadow: 2px 8px 20px rgba(0,0,0,.08);
+  font-family: "Caveat", cursive;
+  color: #233;
+  display: inline-block;
+}
+.postit { max-width: 240px; }
+.scribble { font-family: "Caveat", cursive; color: #2f6158; display: inline-block; margin: 10px 8px; }
+.scribble.tilt { transform: rotate(-3deg); }
+.scribble.tilt-small { transform: rotate(2.5deg); }
+.scribble.faint { opacity: .9; }
+
+/* Little piece of “tape” on sticky notes */
+.postit::before,
+.scribble.sticky::before {
+  content: "";
+  position: absolute;
+  top: -7px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 46px; height: 12px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Final cheeky note at bottom */
+.final-joke { font-family: "Caveat", cursive; color: #666; margin-top: 20px; display: inline-block; }
+
+/* Muted helper (in case variables differ) */
+.muted { color: var(--soft, #6b6a68); }
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .legal-wrap { padding-bottom: 60px; }
+  .required-box { max-width: 100%; font-size: 0.95rem; }
+  .postit-row { gap: 8px; }
+  .postit { max-width: 100%; }
+  details { padding: 10px; }
+}
