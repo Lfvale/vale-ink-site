@@ -1,26 +1,31 @@
+/* ===============  THEME TOKENS  =============== */
 :root{
-  /* Calm light theme */
+  /* Palette */
   --paper:#f5f3f0;
   --ink:#111314;
   --muted:#6b6a68;
   --line:#e6e1db;
   --card:#ffffff;
-  --accent:#2f6158;    /* deep sage */
+  --accent:#2f6158;         /* deep sage */
   --accent-warm:#c7b19b;
-  --max: 1040px;
-  --radius:18px;
-  --shadow: 0 18px 40px rgba(17,19,20,.08);
 
+  /* Layout */
+  --max:1040px;
+  --radius:18px;
+  --shadow:0 18px 40px rgba(17,19,20,.08);
+
+  /* Fonts */
   --serif:"Playfair Display", Georgia, serif;
   --sans:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --hand:"Caveat", cursive;
 }
 
-/* Reset-ish */
+/* ===============  RESET-ish  =============== */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 img{max-width:100%;display:block}
 
-/* Base */
+/* ===============  BASE  =============== */
 body{
   font-family:var(--sans);
   color:var(--ink);
@@ -37,7 +42,7 @@ a:hover{text-decoration:underline}
 
 .wrap{max-width:var(--max);margin:0 auto;padding:24px}
 
-/* Header */
+/* ===============  HEADER  =============== */
 .site-header{
   position:sticky; top:0; z-index:10;
   background:linear-gradient(180deg, rgba(245,243,240,.92), rgba(245,243,240,.65));
@@ -49,7 +54,7 @@ a:hover{text-decoration:underline}
 .site-header nav a{margin-left:18px;color:var(--muted)}
 .btn.small{padding:8px 12px}
 
-/* Hero */
+/* ===============  HERO  =============== */
 .hero{
   background:
     radial-gradient(1200px 700px at 100% -10%, #d7d1c8, transparent 60%),
@@ -59,7 +64,7 @@ a:hover{text-decoration:underline}
 .hero .wrap{padding:80px 24px 46px}
 .hero h1{
   font-family:var(--serif);
-  font-size: clamp(40px, 5vw, 64px);
+  font-size:clamp(40px,5vw,64px);
   line-height:1.12;
   margin:0 0 10px;
   letter-spacing:.2px;
@@ -67,7 +72,7 @@ a:hover{text-decoration:underline}
 .lead{color:var(--muted);max-width:60ch}
 .actions{margin-top:18px}
 
-/* Buttons */
+/* ===============  BUTTONS  =============== */
 .btn{
   display:inline-block;
   background:var(--accent);
@@ -79,10 +84,10 @@ a:hover{text-decoration:underline}
 }
 .btn.ghost{
   background:#fff;color:var(--accent);
-  border:1px solid var(--line);margin-left:10px
+  border:1px solid var(--line);margin-left:10px;
 }
 
-/* Grid & cards */
+/* ===============  GRID & CARDS  =============== */
 .grid{
   display:grid;
   grid-template-columns:1fr;
@@ -114,7 +119,7 @@ blockquote{
   background:linear-gradient(180deg,#fff,#fbf8f4);
 }
 
-/* Form */
+/* ===============  FORM  =============== */
 .form{display:flex;gap:10px;margin-top:10px}
 .form input{
   flex:1;padding:12px 14px;border:1px solid var(--line);
@@ -125,192 +130,132 @@ blockquote{
   background:var(--accent);color:#fff;font-weight:700
 }
 
-/* Meta */
+/* ===============  UTILITIES  =============== */
 .muted{color:var(--muted)}
-.tiny{font-size:12px}
-.link{color:var(--accent)}
+.tiny,.text-xs{font-size:12px}
+.text-sm{font-size:.9rem}
+.text-muted{color:var(--muted)}
+.mt-0{margin-top:0}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+.mb-0{margin-bottom:0}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}
 
-/* Footer */
+/* ===============  FOOTER  =============== */
 .site-footer{border-top:1px solid var(--line);background:#fcfbf9}
 .site-footer a{color:var(--accent)}
 
-/* Responsive */
+/* ===============  RESPONSIVE  =============== */
 @media (min-width:900px){
   .grid{grid-template-columns:repeat(3,1fr)}
   #about{grid-column:span 2}
   #subscribe{grid-column:span 1}
 }
-/* ===== Legal page: dull box + playful sticky notes ===== */
 
-.legal-title{
-  font-size:26px;
-  font-weight:700;
-  color:#2b2b2b;
-  margin:6px 0 10px;
+/* =========================================================
+   LEGAL PAGE
+   ========================================================= */
+.legal-wrap{max-width:920px;margin:36px auto;padding:0 20px 80px}
+.legal-title{font-size:32px;line-height:1.2;margin:0 0 6px;font-weight:700;color:#2b2b2b}
+.impressum{margin:24px 0 80px}
+
+/* Dense boilerplate body */
+.dense{font-size:.95rem;line-height:1.65;color:#444}
+.dense a{color:var(--accent)}
+
+/* Collapsibles (unified look) */
+details{
+  margin:14px 0;
+  padding:12px;
+  border-radius:8px;
+  background:rgba(0,0,0,.03);
 }
-
-.impressum{ margin:24px 0 80px; }
-
-/* smaller, deliberately boring box */
-.legal-box{
-  font-family:"Courier New", Courier, monospace;
-  font-size:.8rem;                 /* smaller text */
-  line-height:1.6;
-  background:#eeeeee;              /* dull gray */
-  color:#333;
-  border:1px solid #cccccc;
-  border-radius:6px;
-  padding:14px 16px;
-  max-width:420px;                 /* keep it compact */
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+details summary{
+  list-style:none;
+  cursor:pointer;
+  font-weight:600;
+  padding:6px 0;
+  position:relative;
 }
+details summary::-webkit-details-marker{display:none}
+details[open] summary{opacity:.9}
 
-/* plain explanatory text below */
-.legal-copy{
-  color:#5f5f5f;
+/* Make the required legal block match the collapsibles */
+.required-box{
+  display:block;
+  padding:14px;
+  border-radius:8px;
+  background:rgba(0,0,0,.03);
+  margin:14px 0;
   font-size:.95rem;
-  margin-top:14px;
-  max-width:52ch;
+  line-height:1.6;
+  color:#444;
+}
+.required-box a{color:#0645ad;text-decoration:underline}
+.required-box a:visited{color:#551A8B}
+
+/* “Boring” filler block, kept but simplified */
+.boring{
+  font-family:"Courier New", Courier, monospace;
+  background:#f1f1f1;
+  color:#333;
+  border:1px solid #ddd;
+  border-radius:6px;
+  padding:14px;
 }
 
-/* sticky-note scribbles */
+/* Sticky notes / scribbles */
+.postit-row{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.postit{
+  position:relative;
+  background:#fff8a6;
+  border:1px solid #eadf8f;
+  border-radius:9px;
+  padding:8px 12px;
+  box-shadow:2px 8px 20px rgba(0,0,0,.08);
+  font-family:var(--hand);
+  color:#233;
+  display:inline-block;
+  max-width:240px;
+}
 .scribble{
-  font-family:"Caveat", cursive;
+  font-family:var(--hand);
   font-weight:600;
   font-size:1.25rem;
-  color:#2f6158;                   /* site accent */
+  color:var(--accent);
   display:inline-block;
   margin:10px 8px 6px 0;
 }
 .scribble.sticky{
+  position:relative;
   background:#fff8a6;
   border:1px solid #eadf8f;
   border-radius:10px;
   padding:8px 12px;
   box-shadow:2px 4px 14px rgba(0,0,0,.12);
 }
-.scribble.tilt{ transform:rotate(4deg); }
-.scribble.tilt-small{ transform:rotate(-2.5deg); }
-.scribble.faint{ opacity:.9 }
+.scribble.tilt{transform:rotate(4deg)}
+.scribble.tilt-small{transform:rotate(-2.5deg)}
+.scribble.faint{opacity:.9}
 
-/* links inside the legal box look default and boring */
-.legal-box a{ color:#0645ad; text-decoration:underline }
-
-/* mobile tweaks */
-@media (max-width:560px){
-  .legal-box{ max-width:100%; font-size:.9rem }
-  .scribble{ font-size:1.1rem }
-}
-/* ===== Legal page: styling for /legal ===== */
-
-.legal-wrap { max-width: 920px; margin: 36px auto; padding: 0 20px 80px; }
-h1.legal-title { font-size: 32px; line-height: 1.2; margin: 0 0 6px; }
-
-/* Dense body text for boilerplate blocks */
-.dense { font-size: 0.95rem; line-height: 1.65; color: #444; }
-.dense a { color: var(--accent, #2f6158); }
-
-/* Collapsible sections */
-details { margin: 14px 0; padding: 12px; border-radius: 8px; background: rgba(0,0,0,0.03); }
-details summary { font-weight: 600; cursor: pointer; padding: 6px 0; list-style: none; }
-details[open] summary { opacity: 0.9; }
-
-/* The required, visible legal block (keep plain & readable) */
-.required-box {
-  font-family: "Courier New", Courier, monospace;   /* deliberately boring */
-  font-size: 0.9rem;
-  line-height: 1.6;
-  background: #efefef;
-  color: #222;
-  border: 1px solid #d2d2d2;
-  border-radius: 6px;
-  padding: 12px 14px;
-  max-width: 520px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
-}
-.required-box a {
-  color: #0645ad;                /* old-school link blue */
-  text-decoration: underline;
-}
-.required-box a:visited { color: #551A8B; }  /* vintage purple visited */
-
-/* “Boring” grey legal paragraphs (extra filler blocks) */
-.boring {
-  font-family: "Courier New", Courier, monospace;
-  background: #f1f1f1;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 14px;
-}
-
-/* Handwritten sticky notes (post-its) */
-.postit-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0; }
-.postit, .scribble.sticky {
-  position: relative;
-  background: #fff8a6;                  /* sticky note yellow */
-  border: 1px solid #eadf8f;
-  border-radius: 9px;
-  padding: 8px 12px;
-  box-shadow: 2px 8px 20px rgba(0,0,0,.08);
-  font-family: "Caveat", cursive;
-  color: #233;
-  display: inline-block;
-}
-.postit { max-width: 240px; }
-.scribble { font-family: "Caveat", cursive; color: #2f6158; display: inline-block; margin: 10px 8px; }
-.scribble.tilt { transform: rotate(-3deg); }
-.scribble.tilt-small { transform: rotate(2.5deg); }
-.scribble.faint { opacity: .9; }
-
-/* Little piece of “tape” on sticky notes */
+/* Tape effect on sticky notes */
 .postit::before,
-.scribble.sticky::before {
-  content: "";
-  position: absolute;
-  top: -7px; left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 46px; height: 12px;
-  background: rgba(255,255,255,0.6);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+.scribble.sticky::before{
+  content:"";
+  position:absolute;
+  top:-7px; left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  width:46px; height:12px;
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:2px;
+  box-shadow:0 1px 2px rgba(0,0,0,.15);
 }
 
-/* Final cheeky note at bottom */
-.final-joke { font-family: "Caveat", cursive; color: #666; margin-top: 20px; display: inline-block; }
+/* Final cheeky note */
+.final-joke{font-family:var(--hand);color:#666;margin-top:20px;display:inline-block}
 
-/* Muted helper (in case variables differ) */
-.muted { color: var(--soft, #6b6a68); }
-
-/* Responsive tweaks */
-@media (max-width: 640px) {
-  .legal-wrap { padding-bottom: 60px; }
-  .required-box { max-width: 100%; font-size: 0.95rem; }
-  .postit-row { gap: 8px; }
-  .postit { max-width: 100%; }
-  details { padding: 10px; }
-}
-details summary {
-  list-style: none;        /* remove default arrow */
-  cursor: pointer;
-  font-weight: 600;
-  padding: 6px 0;
-  position: relative;
-}
-
-details summary::-webkit-details-marker {
-  display: none;           /* remove arrow in Chrome/Safari */
-}
-/* remove the special gray styling */
-.required-box {
-  all: unset; /* resets styles */
-  display: block; /* keep it visible */
-  padding: 14px;
-  border-radius: 8px;
-  background: rgba(0,0,0,0.02);
-  margin: 14px 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #444;
+/* Legal page responsiveness */
+@media (max-width:640px){
+  .legal-wrap{padding-bottom:60px}
+  .postit-row{gap:8px}
+  .postit{max-width:100%}
+  details{padding:10px}
 }
