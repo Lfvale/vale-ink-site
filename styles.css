@@ -3,7 +3,6 @@ body {
     padding: 0;
     font-family: "Segoe UI", sans-serif;
 
-    /* Soft animated pastel gradient */
     background: linear-gradient(135deg, #ffdee9, #d0f0ff, #e4ffd6);
     background-size: 300% 300%;
     animation: gradientShift 10s ease infinite;
@@ -14,14 +13,12 @@ body {
     height: 100vh;
 }
 
-/* subtle background animation */
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* floating decorative blobs */
 body::before,
 body::after {
     content: "";
@@ -48,7 +45,6 @@ body::after {
     right: 10%;
 }
 
-/* main container */
 .container {
     position: relative;
     z-index: 1;
@@ -66,7 +62,6 @@ body::after {
     width: 90%;
 }
 
-/* title */
 h1 {
     font-size: 48px;
     margin-bottom: 20px;
@@ -76,7 +71,6 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
-/* hint box (NEW visual layer) */
 .hint {
     background: #fff;
     padding: 20px;
@@ -90,7 +84,6 @@ h1 {
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-/* input field */
 input {
     padding: 14px;
     width: 100%;
@@ -111,7 +104,6 @@ input:focus {
     outline: none;
 }
 
-/* ✨ upgraded button */
 button {
     padding: 14px 30px;
     border: none;
@@ -131,19 +123,16 @@ button {
     transition: all 0.25s ease;
 }
 
-/* hover effect = feels alive */
 button:hover {
     transform: translateY(-3px) scale(1.05);
     background-position: right;
     box-shadow: 0 12px 25px rgba(0,0,0,0.25);
 }
 
-/* click effect */
 button:active {
     transform: scale(0.97);
 }
 
-/* response text */
 #response {
     margin-top: 15px;
     font-size: 18px;
