@@ -3,76 +3,149 @@ body {
     padding: 0;
     font-family: "Segoe UI", sans-serif;
 
-    /* Soft pastel gradient */
-    background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6ffd6);
-    
+    /* Soft animated pastel gradient */
+    background: linear-gradient(135deg, #ffdee9, #d0f0ff, #e4ffd6);
+    background-size: 300% 300%;
+    animation: gradientShift 10s ease infinite;
+
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-/* Main card */
+/* subtle background animation */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* floating decorative blobs */
+body::before,
+body::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.4;
+    z-index: 0;
+}
+
+body::before {
+    width: 300px;
+    height: 300px;
+    background: #ffb3d9;
+    top: 10%;
+    left: 10%;
+}
+
+body::after {
+    width: 350px;
+    height: 350px;
+    background: #a0d8ff;
+    bottom: 10%;
+    right: 10%;
+}
+
+/* main container */
 .container {
+    position: relative;
+    z-index: 1;
+
     text-align: center;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 50px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 60px 50px;
+    border-radius: 25px;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.15),
+        inset 0 0 10px rgba(255,255,255,0.5);
+
+    max-width: 500px;
+    width: 90%;
 }
 
-/* Title */
+/* title */
 h1 {
-    font-size: 42px;
+    font-size: 48px;
     margin-bottom: 20px;
-    color: #ff7aa2;
+
+    background: linear-gradient(90deg, #ff7eb3, #7edbff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* Hint text */
+/* hint box (NEW visual layer) */
 .hint {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+
     font-size: 20px;
-    color: #555;
+    color: #444;
     margin-bottom: 30px;
-    line-height: 1.5;
+    line-height: 1.6;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-/* Input field */
+/* input field */
 input {
-    padding: 12px;
-    width: 280px;
+    padding: 14px;
+    width: 100%;
+    max-width: 320px;
+
     border: 2px solid #ffd6e0;
-    border-radius: 10px;
-    outline: none;
-    font-size: 16px;
-    margin-bottom: 15px;
-    transition: 0.2s;
+    border-radius: 12px;
+
+    font-size: 18px;
+    margin-bottom: 20px;
+
+    transition: all 0.2s;
 }
 
 input:focus {
     border-color: #a0d8ff;
+    box-shadow: 0 0 10px rgba(160, 216, 255, 0.5);
+    outline: none;
 }
 
-/* Button */
+/* ✨ upgraded button */
 button {
-    padding: 12px 25px;
+    padding: 14px 30px;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #ff9ecb, #a0d8ff);
+    border-radius: 30px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    background: linear-gradient(135deg, #ff9ecb, #ffd86b, #a0d8ff);
+    background-size: 200%;
+
     color: white;
-    font-size: 16px;
     cursor: pointer;
-    transition: 0.2s;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+
+    transition: all 0.25s ease;
 }
 
+/* hover effect = feels alive */
 button:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
+    transform: translateY(-3px) scale(1.05);
+    background-position: right;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
 }
 
-/* Feedback text */
+/* click effect */
+button:active {
+    transform: scale(0.97);
+}
+
+/* response text */
 #response {
     margin-top: 15px;
-    font-size: 16px;
+    font-size: 18px;
     color: #ff4d6d;
 }
