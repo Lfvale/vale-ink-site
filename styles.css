@@ -1,61 +1,70 @@
 body {
     margin: 0;
     background: #000;
-    color: #e6ffe6;
-    font-family: "VT323", monospace;
-    font-size: 22px;
+    color: #fff;
+    font-family: monospace;
+    font-size: 16px;
 }
 
-/* Terminal output */
+/* MAIN TERMINAL WINDOW */
 #terminal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+
     padding: 20px;
-    height: calc(100vh - 60px);
+
     overflow-y: auto;
+
     white-space: pre-wrap;
-    line-height: 1.2em;
+    word-wrap: break-word;
+    line-height: 1.4em;
 }
 
-/* Input bar */
+/* EACH PRINT LINE */
+.line {
+    display: block;
+    margin: 2px 0;
+}
+
+/* subtle glow like old CRT */
+.glow {
+    text-shadow: 0 0 3px rgba(255,255,255,0.4);
+}
+
+/* INPUT BAR */
 #input-bar {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
+
+    height: 50px;
+
     display: flex;
-    padding: 10px 15px;
-    border-top: 1px solid #1a1a1a;
+    align-items: center;
+
+    padding: 0 12px;
+
+    border-top: 1px solid #222;
     background: #000;
 }
 
 .prompt {
     margin-right: 10px;
-    color: #b6ffb6;
+    color: #aaa;
 }
 
 #command {
     flex: 1;
+
     background: none;
     border: none;
     outline: none;
+
     color: #fff;
-    font-family: inherit;
-    font-size: inherit;
-}
-
-/* Lines */
-.line {
-    margin: 2px 0;
-}
-
-/* Subtle glow */
-.glow {
-    text-shadow: 0 0 4px #8aff8a;
-}
-
-/* Boot overlay (optional flicker feel) */
-#boot-overlay {
-    position: fixed;
-    inset: 0;
-    background: black;
-    pointer-events: none;
-    opacity: 0;
+    font-family: monospace;
+    font-size: 16px;
 }
