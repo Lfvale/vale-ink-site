@@ -73,7 +73,23 @@ Some flowers sway.
 
 I'd still pick you
 
-Every single day.`
+Every single day.`,
+
+/* =========================
+   🆕 ADDITION: GIFT FILE
+========================= */
+"gift.txt":
+`GIFT UNLOCKED ♥
+
+Here is your final reward:
+
+🎁 Steam Key 1: XXXXX-XXXXX-XXXXX
+🎁 Steam Key 2: XXXXX-XXXXX-XXXXX
+🎁 Steam Key 3: XXXXX-XXXXX-XXXXX
+
+Replace these with real keys.
+
+You are my favorite person. ♥`
 };
 
 boot();
@@ -307,28 +323,7 @@ ACHIEVEMENT UNLOCKED
 
 A hidden file has appeared...
 
-letters/secret.txt
+gift/secret.txt
 `);
-
-files["secret.txt"] = `
-If you've made it here...
-
-then you've seen all the little corners I left for you.
-
-This wasn't just a fallout terminal.
-
-It was a place for you.
-
-Every line, every command,
-every tiny text...
-
-was just me trying to say:
-
-I love you.
-
-Always.
-`;
-
-fs["/letters"].push("secret.txt");
 }
 }
