@@ -48,7 +48,7 @@ I still don't know.
 
 I just know I do.
 
-— Your girlfriend ♥`,
+- Your girlfriend ♥`,
 
 "dream.txt":
 `Future simulation:
@@ -87,7 +87,7 @@ LOADING LOVE-TEC SYSTEM...
 
 Booting...
 
-Loading hope.sys
+Loading care.sys
 Loading kissies.dll
 Loading nyxie.exe
 
@@ -95,7 +95,7 @@ Loading nyxie.exe
 
 SYSTEM READY.
 
-Welcome, Engineer.
+Welcome, Wanderer.
 
 This terminal has been waiting for you.
 
@@ -187,11 +187,11 @@ break;
 case "status":
 print(`Relationship Status
 
-Distance.....ACTIVE
-Trust........100%
-Laughs.......∞
-Missing You..Very
-Overall......Stable ♥`);
+Patience.......ACTIVE
+Trust..........100%
+Laughs.........Infinite
+Missing You....Very
+Overall........Stable ♥`);
 unlock("status");
 break;
 
@@ -212,6 +212,7 @@ break;
 
 case "tea":
 print(`Some drink coffee.
+
 Some drink tea.
 
 I'd drink either
@@ -232,24 +233,37 @@ break;
 
 case "things":
 print(`
-Thing 1 and Thing 2 (but better)
+Thing Two, Thing One,
+we're on the run.
+Thing one, Thing Two,
+we run there too.
 
-We were two small sparks in a big wide place,
-you with your code, me with my page.
+If Thing One goes left,
+then Thing Two goes left.
+No need for a plan;
+we just do it best.
 
-Thing 1 said "hi" in a curious way,
-Thing 2 replied "I hope you stay."
+We hop and we stop
+with a bop and a drop.
+We go up and down
+all over the town.
 
-We ran around worlds made of late-night talks,
-debugging life in long soft walks.
+Thing One says "go!"
+Thing Two says "yo!"
+We never go solo,
+we always together and so.
 
-If you're Thing 2, then I'm Thing 1 —
-and somehow together we’ve already won.
+We slide on the floor,
+then slide some more.
+We open a door;
+then open four more.
 
-No boxes, no rules, no end in sight,
-just two little chaos lights.
+Thing One is you,
+Thing Two is me.
+We stick like glue
+in all we do.
 
-— Seuss-ish thoughts from me to you ♥
+— Thingy thoughts from me to you ♥
 `);
 unlock("things");
 break;
@@ -301,12 +315,12 @@ If you've made it here...
 
 then you've seen all the little corners I left for you.
 
-This wasn't just a terminal.
+This wasn't just a fallout terminal.
 
 It was a place for you.
 
 Every line, every command,
-every tiny poem...
+every tiny text...
 
 was just me trying to say:
 
