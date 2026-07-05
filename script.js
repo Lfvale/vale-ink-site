@@ -83,9 +83,11 @@ Every single day.`,
 
 Here is your final reward:
 
-🎁 Steam Key 1: XXXXX-XXXXX-XXXXX
-🎁 Steam Key 2: XXXXX-XXXXX-XXXXX
-🎁 Steam Key 3: XXXXX-XXXXX-XXXXX
+🎁 3FGVG-4DPGD-OVRLC
+🎁 FZTNP-4ECLJ-ND7T9
+🎁 MCB2K-TK6K6-M6PGD
+🎁 3LIYF-4HMR3-KDD2G
+🎁 6K05P-8VTJV-B65WZ
 
 Replace these with real keys.
 
