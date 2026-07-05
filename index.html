@@ -2,38 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Easter Quest 💜🖤</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOVE-TEC Terminal</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <!-- Retro terminal font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
-    <h1>🐣 Easter Quest 🐇</h1>
-    
-    <p class="hint">
-        Every hunt starts somewhere!
-        Where we play, I exist. Where I hunt, you shall continue.<br><br>
-        Without you, it wouldn't be as intriguing, what am I? 🖤💜
-        (New messages may appear)
-    </p>
+<div id="crt">
 
-    <input type="text" id="answer" placeholder="Enter your answer...">
-    <button onclick="checkAnswer()">Submit</button>
+    <div id="terminal">
 
-    <p id="response"></p>
+        <div id="output"></div>
+
+        <div id="input-line">
+            <span class="prompt">></span>
+            <input
+                id="command"
+                autocomplete="off"
+                spellcheck="false"
+                autofocus
+            />
+        </div>
+
+    </div>
+
 </div>
 
-<script>
-function checkAnswer() {
-    let input = document.getElementById("answer").value.toLowerCase();
-
-    if (input === "steam") {
-        window.location.href = "https://steamcommunity.com/id/Zen178/";
-    } else {
-        document.getElementById("response").innerText = "Not quite...";
-    }
-}
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
