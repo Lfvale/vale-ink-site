@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOVE-TEC Terminal</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>terminal</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: monospace;
+    font-size: 16px;
+}
 
-    <!-- Retro terminal font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+#terminal {
+    padding: 20px;
+    white-space: pre-wrap;
+}
+
+.line {
+    margin: 2px 0;
+}
+
+.input-line {
+    display: flex;
+}
+
+.prompt {
+    margin-right: 8px;
+}
+
+#cmd {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    font: inherit;
+    width: 100%;
+}
+</style>
 </head>
+
 <body>
 
-<div id="crt">
+<div id="terminal"></div>
 
-    <div id="terminal">
-
-        <div id="output"></div>
-
-        <div id="input-line">
-            <span class="prompt">></span>
-            <input
-                id="command"
-                autocomplete="off"
-                spellcheck="false"
-                autofocus
-            />
-        </div>
-
-    </div>
-
+<div class="input-line" style="padding:20px;">
+    <span class="prompt">$</span>
+    <input id="cmd" autocomplete="off" autofocus />
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
