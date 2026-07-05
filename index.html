@@ -3,52 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>terminal</title>
+<title>LOVE-TEC TERMINAL</title>
 
-<style>
-body {
-    margin: 0;
-    background: #000;
-    color: #fff;
-    font-family: monospace;
-    font-size: 16px;
-}
+<link rel="stylesheet" href="style.css">
 
-#terminal {
-    padding: 20px;
-    white-space: pre-wrap;
-}
-
-.line {
-    margin: 2px 0;
-}
-
-.input-line {
-    display: flex;
-}
-
-.prompt {
-    margin-right: 8px;
-}
-
-#cmd {
-    background: none;
-    border: none;
-    outline: none;
-    color: white;
-    font: inherit;
-    width: 100%;
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+<div id="boot-overlay"></div>
+
 <div id="terminal"></div>
 
-<div class="input-line" style="padding:20px;">
-    <span class="prompt">$</span>
-    <input id="cmd" autocomplete="off" autofocus />
+<div id="input-bar">
+    <span class="prompt">LOVE-TEC:\></span>
+    <input id="command" autocomplete="off" />
 </div>
 
 <script src="script.js"></script>
