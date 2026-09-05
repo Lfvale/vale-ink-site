@@ -1,23 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LOVE-TEC TERMINAL</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>a story for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css">
+<style>
+  /* ============================================================
+     EDIT ZONE 1: COLORS
+     Change these six values to retheme the whole page.
+     ============================================================ */
+  :root {
+    --bg:        #1B1F2E; /* deep ink-blue background */
+    --text:      #EDE4D3; /* warm parchment text */
+    --accent:    #D9A566; /* amber — cursor, borders, active choice */
+    --choice:    #C97C7C; /* muted rose — choice text */
+    --dim:       #7A8296; /* slate — secondary/system text */
+    --border:    #3A3F52; /* subtle frame line */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--text);
+  }
+
+  /* ── Title screen ─────────────────────────────────────────── */
+  #titleScreen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 1.2s ease;
+  }
+  #titleScreen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #titleContent {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ============================================================
+     EDIT ZONE 0: TITLE
+     Change the h1 text and the "by" name in the HTML below.
+     ============================================================ */
+
+  .title-ornament {
+    color: var(--accent);
+    font-size: 1.1rem;
+    letter-spacing: 0.7em;
+    opacity: 0.7;
+    margin-bottom: 0.5em;
+  }
+
+  .title-rule {
+    width: 160px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 0.7em auto;
+  }
+
+  #titleText {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    color: var(--text);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  #titleBy {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    margin-top: 0.2em;
+  }
+
+  #titleSub {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+    letter-spacing: 0.18em;
+    margin-top: 2rem;
+    opacity: 0.5;
+    animation: blink 1.8s steps(1) infinite;
+  }
+
+  /* ── Frame ────────────────────────────────────────────────── */
+  #frame {
+    position: fixed;
+    inset: 18px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+    z-index: 1;
+  }
+  #frame::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Console ──────────────────────────────────────────────── */
+  #console {
+    width: min(680px, 88vw);
+    height: min(78vh, 720px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 40px 8px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  #console.visible { opacity: 1; }
+
+  #scrollArea {
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  #scrollArea::-webkit-scrollbar { width: 6px; }
+  #scrollArea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Passage text ─────────────────────────────────────────── */
+  .passage {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 1.2em;
+    white-space: pre-wrap;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .passage.typing::after {
+    content: '▍';
+    color: var(--accent);
+    animation: blink 1s steps(1) infinite;
+    display: inline-block;
+  }
+
+  /* ── Scene divider ────────────────────────────────────────── */
+  .divider {
+    text-align: center;
+    color: var(--border);
+    font-size: 1rem;
+    letter-spacing: 0.6em;
+    margin: 0.2em 0 1.6em;
+    user-select: none;
+  }
+
+  /* ── Continue prompt ──────────────────────────────────────── */
+  .continue-prompt {
+    color: var(--dim);
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    margin: 0.4em 0 1em;
+    cursor: pointer;
+    animation: blink 1.6s steps(1) infinite;
+    transition: opacity 0.35s ease;
+    user-select: none;
+  }
+  .continue-prompt.fade-out { opacity: 0; }
+
+  /* ── Choices ──────────────────────────────────────────────── */
+  #choices {
+    margin-top: 0.4em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .choice {
+    font-family: 'Courier New', monospace;
+    font-size: 0.97rem;
+    color: var(--choice);
+    background: none;
+    border: 1px solid transparent;
+    border-left: 2px solid var(--choice);
+    text-align: left;
+    padding: 6px 12px;
+    cursor: pointer;
+    opacity: 0;
+    transition: background 0.15s ease, opacity 0.4s ease;
+  }
+  .choice.show { opacity: 1; }
+  .choice:hover, .choice:focus-visible {
+    background: rgba(217, 165, 102, 0.08);
+    outline: none;
+    border-left-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Input row ────────────────────────────────────────────── */
+  #inputRow {
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Courier New', monospace;
+    color: var(--dim);
+    font-size: 0.92rem;
+  }
+  #typedInput {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: 0.92rem;
+    padding: 4px 2px;
+    outline: none;
+  }
+  #typedInput:focus { border-bottom-color: var(--accent); }
+
+  #hint {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+    margin-top: 1em;
+    opacity: 0.5;
+  }
+
+  /* ── Restart ──────────────────────────────────────────────── */
+  #restartRow { margin-top: 1.6em; }
+  .restart-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .restart-btn:hover { color: var(--accent); border-color: var(--accent); }
+</style>
 </head>
-
 <body>
 
-<div id="terminal"></div>
-
-<div id="input-bar">
-    <span class="prompt">LOVE-TEC:\></span>
-    <input id="command" autocomplete="off" spellcheck="false"/>
+<!-- Title screen — change the h1 text and the "by" name below -->
+<div id="titleScreen">
+  <div id="titleContent">
+    <div class="title-ornament">✦ · ✦</div>
+    <div class="title-rule"></div>
+    <h1 id="titleText">a story for you</h1>
+    <div class="title-rule"></div>
+    <p id="titleBy">by lucyna</p>
+    <p id="titleSub">click anywhere to begin</p>
+  </div>
 </div>
 
-<script src="script.js"></script>
+<div id="frame"></div>
+
+<div id="console">
+  <div id="scrollArea">
+    <div id="log"></div>
+    <div id="choices"></div>
+    <div id="inputRow" style="display:none;">
+      <span>&gt;</span>
+      <input id="typedInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a number or keyword, then enter">
+    </div>
+    <div id="hint">click a choice above, or type its number and press enter</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT ZONE 2: THE STORY
+   ------------------------------------------------------------
+   Each entry in STORY is one "node" (a moment in the story).
+
+   nodeId: {
+     text: "The passage text that prints out.",
+     choices: [
+       { label: "What she sees as the option", goto: "nextNodeId" },
+       { label: "Another option",              goto: "otherNodeId" }
+     ]
+   }
+
+   - Use \n\n for paragraph breaks inside text.
+   - No choices (or empty array) = an ending node.
+   - Multiple choices can share the same "goto" — that's the
+     illusion-of-choice trick. The story reconverges, she still
+     felt the choice was real.
+   - START_NODE is the first node shown. Don't rename "start"
+     unless you update START_NODE below to match.
+   ============================================================ */
+
+  const START_NODE = "start";
+
+  const STORY = {
+    start: {
+      text: "The lamp is low, the room is quiet, and somewhere in the walls a story is waiting for someone to open the door.\n\nYou don't remember choosing to come here. But here you are.",
+      choices: [
+        { label: "Open the door.", goto: "hallway" },
+        { label: "Knock first, just in case.", goto: "hallway" }
+      ]
+    },
+    hallway: {
+      text: "Either way, the door opens the same — onto a narrow hallway lined with old photographs. You don't recognize the hallway, but you recognize some of the faces.",
+      choices: [
+        { label: "Look closer at the photographs.", goto: "photos" },
+        { label: "Keep walking.", goto: "photos" }
+      ]
+    },
+    photos: {
+      text: "This is placeholder text. Replace it with your own scene. Keep the branching pattern: give her a real choice here, or one that quietly leads to the same place.",
+      choices: [
+        { label: "Placeholder choice A", goto: "ending" },
+        { label: "Placeholder choice B", goto: "ending" }
+      ]
+    },
+    ending: {
+      text: "This is a placeholder ending. Replace this with how you actually want the story to close.",
+      choices: []
+    }
+  };
+
+  /* ============================================================
+     EDIT ZONE 3 (optional): A REAL NOTE AFTER THE STORY ENDS
+     Set SHOW_REAL_NOTE to true and write your message in REAL_NOTE.
+     It will type itself out after the story ends, same style.
+     ============================================================ */
+  const SHOW_REAL_NOTE = false;
+  const REAL_NOTE = "Write your real note here.";
+
+/* ============================================================
+   Engine — no need to edit below this line.
+   ============================================================ */
+
+  const log          = document.getElementById('log');
+  const choicesEl    = document.getElementById('choices');
+  const inputRow     = document.getElementById('inputRow');
+  const typedInput   = document.getElementById('typedInput');
+  const scrollArea   = document.getElementById('scrollArea');
+  const titleScreen  = document.getElementById('titleScreen');
+  const consoleEl    = document.getElementById('console');
+
+  let typing       = false;
+  let passageCount = 0;
+
+  // ── Title screen ────────────────────────────────────────────
+  function beginStory() {
+    titleScreen.classList.add('fade-out');
+    setTimeout(() => {
+      titleScreen.style.display = 'none';
+      consoleEl.classList.add('visible');
+      renderNode(START_NODE);
+    }, 1200);
+  }
+
+  titleScreen.addEventListener('click', beginStory);
+  document.addEventListener('keydown', function onFirstKey(e) {
+    document.removeEventListener('keydown', onFirstKey);
+    beginStory();
+  });
+
+  // ── Helpers ─────────────────────────────────────────────────
+  function scrollDown() {
+    scrollArea.scrollTop = scrollArea.scrollHeight;
+  }
+
+  // ── Typewriter ───────────────────────────────────────────────
+  function typeText(el, text, onDone) {
+    typing = true;
+    let i = 0;
+    let displayed = '';
+    el.classList.add('typing');
+
+    function step() {
+      if (i < text.length) {
+        displayed += text[i];
+        el.textContent = displayed;
+        i++;
+        scrollDown();
+
+        const ch   = text[i - 1];
+        const next = text[i] || '';
+
+        // base speed — 50 to 100ms, randomised
+        let delay = 50 + Math.random() * 50;
+
+        // punctuation breath pauses
+        if (ch === '.')              delay += 280 + Math.random() * 120;
+        if (ch === ',')              delay += 110 + Math.random() * 70;
+        if (ch === '?' || ch === '!') delay += 260 + Math.random() * 100;
+        if (ch === ';' || ch === ':') delay +=  90 + Math.random() * 50;
+        if (ch === '\n')             delay += 320 + Math.random() * 160;
+
+        // spaces are quick
+        if (ch === ' ' && next !== ' ') delay -= 20;
+
+        // rare mid-thought hesitation (~4%)
+        if (Math.random() < 0.04) delay += 200 + Math.random() * 225;
+
+        setTimeout(step, delay);
+      } else {
+        el.classList.remove('typing');
+        typing = false;
+        if (onDone) onDone();
+      }
+    }
+    step();
+  }
+
+  // ── Continue prompt ──────────────────────────────────────────
+  function showContinuePrompt(onContinue) {
+    const prompt = document.createElement('div');
+    prompt.className = 'continue-prompt';
+    prompt.textContent = '· · ·';
+    log.appendChild(prompt);
+    scrollDown();
+
+    // dots linger for 900ms, then fade out, then choices appear
+    setTimeout(() => {
+      prompt.classList.add('fade-out');
+      setTimeout(() => { prompt.remove(); onContinue(); }, 380);
+    }, 900);
+  }
+
+  // ── Scene divider ────────────────────────────────────────────
+  function addDivider() {
+    const div = document.createElement('div');
+    div.className = 'divider';
+    div.textContent = '· · ·';
+    log.appendChild(div);
+  }
+
+  // ── Render a story node ──────────────────────────────────────
+  function renderNode(nodeId) {
+    const node = STORY[nodeId];
+    choicesEl.innerHTML = '';
+    inputRow.style.display = 'none';
+
+    if (passageCount > 0) addDivider();
+    passageCount++;
+
+    const p = document.createElement('div');
+    p.className = 'passage';
+    log.appendChild(p);
+
+    typeText(p, node.text, () => {
+      const hasChoices = node.choices && node.choices.length > 0;
+
+      showContinuePrompt(() => {
+        if (hasChoices) {
+          node.choices.forEach((choice, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice';
+            btn.textContent = '🐾  ' + choice.label;
+            btn.addEventListener('click', () => selectChoice(choice, node));
+            choicesEl.appendChild(btn);
+            setTimeout(() => btn.classList.add('show'), idx * 140);
+          });
+
+          inputRow.style.display = 'flex';
+          typedInput.value = '';
+          typedInput.focus();
+
+          typedInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              const val = typedInput.value.trim().toLowerCase();
+              let matched = null;
+              const asNum = parseInt(val, 10);
+              if (!isNaN(asNum) && node.choices[asNum - 1]) {
+                matched = node.choices[asNum - 1];
+              } else {
+                matched = node.choices.find(c => c.label.toLowerCase().includes(val));
+              }
+              if (matched) selectChoice(matched, node);
+            }
+          };
+        } else {
+          // Ending node
+          if (SHOW_REAL_NOTE) {
+            setTimeout(() => {
+              const noteP = document.createElement('div');
+              noteP.className = 'passage';
+              log.appendChild(noteP);
+              typeText(noteP, REAL_NOTE, showRestart);
+            }, 600);
+          } else {
+            showRestart();
+          }
+        }
+        scrollDown();
+      });
+    });
+  }
+
+  // ── Restart button ───────────────────────────────────────────
+  function showRestart() {
+    const row = document.createElement('div');
+    row.id = 'restartRow';
+    const btn = document.createElement('button');
+    btn.className = 'restart-btn';
+    btn.textContent = 'read again';
+    btn.addEventListener('click', () => {
+      log.innerHTML = '';
+      choicesEl.innerHTML = '';
+      passageCount = 0;
+      renderNode(START_NODE);
+    });
+    row.appendChild(btn);
+    log.appendChild(row);
+    scrollDown();
+  }
+
+  // ── Select a choice ──────────────────────────────────────────
+  function selectChoice(choice) {
+    if (typing) return;
+    choicesEl.innerHTML = '';
+    inputRow.style.display = 'none';
+    renderNode(choice.goto);
+  }
+
+</script>
 
 </body>
 </html>
