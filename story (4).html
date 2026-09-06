@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>a story for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=VT323&family=Orbitron:wght@700&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@300;500&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     EDIT ZONE 1: MAIN STORY COLORS ("cozy blue")
+     Palette for the teaser screens and the story console at the
+     very end. Per-node overrides live in EDIT ZONE 7. Every other
+     prologue screen has its own separate look below.
+     ============================================================ */
+  :root {
+    --bg:        #1B1F2E;
+    --text:      #EDE4D3;
+    --accent:    #D9A566;
+    --choice:    #C97C7C;
+    --dim:       #7A8296;
+    --border:    #3A3F52;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--text);
+    transition: background-color 1.2s ease, color 1.2s ease;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .stage-screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.1s ease;
+  }
+  .stage-screen.active { opacity: 1; pointer-events: auto; }
+  .stage-screen.fade-out { opacity: 0; pointer-events: none; }
+
+  /* ============================================================
+     SCREEN 1 — TEASER (cozy blue)
+     EDIT ZONE 0A: change TEASER_LINES in the script below.
+     ============================================================ */
+  #teaserScreen { background: var(--bg); }
+
+  #teaserText {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(2.2rem, 6.5vw, 3.8rem);
+    color: var(--text);
+    letter-spacing: 0.03em;
+    text-align: center;
+    padding: 0 8vw;
+    opacity: 1;
+    transition: opacity 1.3s ease;
+  }
+  #teaserText.fade { opacity: 0; }
+
+  #teaserPrompt {
+    margin-top: 2.4em;
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    opacity: 0.5;
+    animation: blink 1.8s steps(1) infinite;
+  }
+
+  /* ============================================================
+     SCREEN 2 (reused 5x) — BLACK CARD
+     EDIT ZONE 0B: change BLACK_STEPS in the script below.
+     ============================================================ */
+  #blackScreen { background: #000; color: #fff; }
+  #blackScreen::before {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border: 1px solid rgba(255,255,255,0.55);
+    pointer-events: none;
+  }
+  #blackScreen::after {
+    content: "";
+    position: absolute;
+    inset: 30px;
+    border: 1px solid rgba(255,255,255,0.22);
+    pointer-events: none;
+  }
+  #blackMain {
+    position: relative;
+    z-index: 1;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 4vw, 2.3rem);
+    text-align: center;
+    letter-spacing: 0.04em;
+    padding: 0 8vw;
+  }
+  #blackByline {
+    position: relative;
+    z-index: 1;
+    display: none;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.2em;
+    margin-top: 0.7em;
+  }
+  #blackPrompt {
+    position: relative;
+    z-index: 1;
+    margin-top: 2.2em;
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.5);
+    animation: blink 1.8s steps(1) infinite;
+  }
+
+  /* ============================================================
+     SCREEN 3 — FALLOUT / ROBCO TERMINAL
+     EDIT ZONE 0C: change BOOT_TEXT in the script below.
+     ============================================================ */
+  #bootScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: #030A03;
+    color: #4AFF6E;
+    font-family: 'VT323', monospace;
+    font-size: clamp(1rem, 2.3vw, 1.35rem);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    padding: 8vh 10vw;
+    cursor: pointer;
+    text-shadow: 0 0 4px rgba(74,255,110,0.75), 0 0 14px rgba(74,255,110,0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s ease;
+  }
+  #bootScreen.active { opacity: 1; pointer-events: auto; }
+  #bootScreen.fade-out { opacity: 0; pointer-events: none; }
+  #bootScreen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  #bootScreen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+  }
+  @keyframes crtFlicker {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0.85; }
+    98% { opacity: 1; }
+    99% { opacity: 0.92; }
+  }
+  #bootLines { position: relative; z-index: 1; animation: crtFlicker 6s infinite; white-space: pre-wrap; }
+  .typed-line { min-height: 1.6em; }
+  #bootPrompt {
+    display: none;
+    position: relative;
+    z-index: 1;
+    margin-top: 2em;
+    letter-spacing: 0.15em;
+    animation: blink 1.3s steps(1) infinite;
+  }
+  #bootPrompt.show { display: block; }
+  #bootPrompt::after { content: '_'; }
+
+  /* ============================================================
+     SCREEN 4 — STARCRAFT / STEEL-BLUE COMMAND HUD
+     EDIT ZONE 0D: change STARCRAFT_TEXT in the script below.
+     ============================================================ */
+  #starcraftScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background: linear-gradient(160deg, #0a1420 0%, #142333 45%, #0a1420 100%);
+    color: #8FE3FF;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 8vh 10vw;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s ease;
+    overflow: hidden;
+  }
+  #starcraftScreen.active { opacity: 1; pointer-events: auto; }
+  #starcraftScreen.fade-out { opacity: 0; pointer-events: none; }
+  #starcraftScreen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .hud-corner { position: absolute; width: 34px; height: 34px; border-color: #5FD3FF; opacity: 0.85; }
+  .hud-corner.tl { top: 22px; left: 22px; border-top: 2px solid; border-left: 2px solid; }
+  .hud-corner.tr { top: 22px; right: 22px; border-top: 2px solid; border-right: 2px solid; }
+  .hud-corner.bl { bottom: 22px; left: 22px; border-bottom: 2px solid; border-left: 2px solid; }
+  .hud-corner.br { bottom: 22px; right: 22px; border-bottom: 2px solid; border-right: 2px solid; }
+  #starcraftHeader {
+    position: relative; z-index: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    letter-spacing: 0.25em;
+    color: #EAF6FF;
+    text-shadow: 0 0 8px rgba(95,211,255,0.7);
+    margin-bottom: 1em;
+  }
+  #starcraftLines {
+    position: relative; z-index: 1;
+    font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+    line-height: 1.8;
+    text-shadow: 0 0 6px rgba(95,211,255,0.5);
+    white-space: pre-wrap;
+  }
+  #starcraftPrompt {
+    display: none;
+    position: relative; z-index: 1;
+    margin-top: 2em;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.2em;
+    color: #5FD3FF;
+    animation: blink 1.3s steps(1) infinite;
+  }
+  #starcraftPrompt.show { display: block; }
+  #starcraftPrompt::before { content: '[ '; }
+  #starcraftPrompt::after { content: ' ]'; }
+
+  /* ============================================================
+     SCREEN 5 — STRAY / B-12 TERMINAL BOOT
+     EDIT ZONE 0E: change STRAY_LINES in the script below.
+     Mixes monospace "system" lines with softer narrative lines,
+     styled differently, inside the same typed sequence.
+     ============================================================ */
+  #strayScreen {
+    overflow: hidden;
+    background: linear-gradient(180deg, #0c0714 0%, #050308 100%);
+    padding: 8vh 8vw;
+  }
+  #strayScreen::before {
+    content: "";
+    position: absolute;
+    inset: 26px;
+    border: 1px solid rgba(120,90,160,0.45);
+    pointer-events: none;
+  }
+  #strayScreen::after {
+    content: "";
+    position: absolute;
+    inset: 34px;
+    border: 1px solid rgba(120,90,160,0.22);
+    pointer-events: none;
+  }
+  #strayGlow {
+    position: absolute;
+    width: 70vw; height: 70vw;
+    left: 50%; top: 45%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(150,100,200,0.15), transparent 60%);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+  #starField { position: absolute; inset: 0; pointer-events: none; }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 1; }
+  }
+  #strayContent { position: relative; z-index: 2; max-width: 480px; margin: 0 auto; text-align: left; }
+  #strayLinesEl { min-height: 1em; }
+  #strayLinesEl .typed-line.header-line {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    letter-spacing: 0.2em;
+    color: #D8CDEB;
+    text-shadow: 0 0 8px rgba(150,100,200,0.6);
+    margin-bottom: 0.4em;
+  }
+  #strayLinesEl .typed-line.sys-line {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.8rem, 1.7vw, 0.95rem);
+    letter-spacing: 0.06em;
+    color: #9F7FD9;
+    text-shadow: 0 0 6px rgba(150,100,220,0.5);
+    white-space: pre-wrap;
+  }
+  #strayLinesEl .typed-line.narrative-line {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 300;
+    font-size: clamp(0.95rem, 2.1vw, 1.15rem);
+    letter-spacing: 0.1em;
+    line-height: 1.9;
+    color: #E7DEF5;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(150,100,200,0.3);
+    white-space: pre-wrap;
+    margin: 0.2em 0;
+  }
+  #strayPrompt {
+    position: relative;
+    z-index: 2;
+    display: none;
+    margin-top: 1.8em;
+    text-align: center;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 300;
+    font-size: 0.66rem;
+    letter-spacing: 0.35em;
+    color: #B678FF;
+    text-shadow: 0 0 8px rgba(182,120,255,0.6);
+    animation: blink 1.6s steps(1) infinite;
+  }
+  #strayPrompt.show { display: block; }
+
+  /* ============================================================
+     SCREEN 6 — DIGITAL CIRCUS
+     EDIT ZONE 0F: change CIRCUS_LINES in the script below.
+     ============================================================ */
+  #circusScreen {
+    overflow: hidden;
+    background: repeating-linear-gradient(135deg, #3E2277 0px, #3E2277 46px, #4E2C99 46px, #4E2C99 92px);
+    padding: 6vh 8vw;
+  }
+  #circusScreen::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 42%;
+    width: 70vw; height: 70vw;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  #circusScreen::after {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    border: 6px solid #B026FF;
+    border-radius: 28px;
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.25);
+    pointer-events: none;
+  }
+  #circusContent { position: relative; z-index: 2; text-align: center; max-width: 560px; }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-1deg); }
+    50%      { transform: rotate(1deg); }
+  }
+  #circusLinesEl {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.6vw, 1.4rem);
+    color: #FFFFFF;
+    letter-spacing: 0.02em;
+    line-height: 1.65;
+    text-shadow: 0 0 14px rgba(255,61,173,0.55), 0 3px 0 rgba(0,0,0,0.25);
+    white-space: pre-wrap;
+    animation: wiggle 3.2s ease-in-out infinite;
+    display: inline-block;
+  }
+  #circusNameRow {
+    display: none;
+    margin-top: 1.6em;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7em;
+  }
+  #circusNameHint {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    color: #FF3DAD;
+    animation: blink 1.5s steps(1) infinite;
+  }
+  #circusNameForm { display: flex; gap: 10px; }
+  #circusNameInput {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #FF3DAD;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    color: #fff;
+    outline: none;
+    text-align: center;
+    min-width: 180px;
+  }
+  #circusNameInput::placeholder { color: rgba(255,255,255,0.55); }
+  #circusNameBtn {
+    background: #FF3DAD;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 18px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  #circusNameBtn:hover { background: #ff64bd; }
+  #circusPrompt {
+    display: none;
+    margin-top: 1.8em;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: #FF3DAD;
+    animation: blink 1.5s steps(1) infinite;
+  }
+  #circusPrompt.show { display: block; }
+
+  /* ── Frame (behind everything, shows once the console appears) ── */
+  #frame {
+    position: fixed;
+    inset: 18px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+    z-index: 1;
+    transition: border-color 1.2s ease;
+  }
+  #frame::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--border);
+    transition: border-color 1.2s ease;
+  }
+
+  /* ── Console ──────────────────────────────────────────────── */
+  #console {
+    width: min(680px, 88vw);
+    height: min(78vh, 720px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 40px 8px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  #console.visible { opacity: 1; }
+
+  #scrollArea {
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  #scrollArea::-webkit-scrollbar { width: 6px; }
+  #scrollArea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .passage {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 1.2em;
+    white-space: pre-wrap;
+  }
+
+  .passage-small {
+    font-size: 0.78rem;
+    font-style: italic;
+    opacity: 0.7;
+    margin-bottom: 0.9em;
+    white-space: pre-wrap;
+  }
+
+  .passage.typing::after {
+    content: '▍';
+    color: var(--accent);
+    animation: blink 1s steps(1) infinite;
+    display: inline-block;
+  }
+
+  .divider {
+    text-align: center;
+    color: var(--border);
+    font-size: 1rem;
+    letter-spacing: 0.6em;
+    margin: 0.2em 0 1.6em;
+    user-select: none;
+    transition: color 1.2s ease;
+  }
+
+  .continue-prompt {
+    color: var(--dim);
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    margin: 0.4em 0 1em;
+    cursor: pointer;
+    animation: blink 1.6s steps(1) infinite;
+    transition: opacity 0.35s ease, color 1.2s ease;
+    user-select: none;
+  }
+  .continue-prompt.fade-out { opacity: 0; }
+
+  #choices {
+    margin-top: 2.6em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9em;
+    transition: border-color 1.2s ease;
+  }
+
+  .choice {
+    position: relative;
+    font-family: 'Courier New', monospace;
+    font-size: 0.92rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--choice);
+    background: rgba(255,255,255,0.015);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    text-align: left;
+    padding: 14px 20px 14px 34px;
+    cursor: pointer;
+    opacity: 0;
+    transition: background 0.2s ease, opacity 0.4s ease, color 1.2s ease,
+                border-color 0.25s ease, transform 0.25s ease;
+  }
+  .choice::before {
+    content: '›';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    opacity: 0.6;
+    transition: color 1.2s ease, opacity 0.25s ease;
+  }
+  .choice.show { opacity: 1; }
+  .choice:hover, .choice:focus-visible {
+    background: rgba(217, 165, 102, 0.08);
+    outline: none;
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateX(8px);
+  }
+  .choice:hover::before, .choice:focus-visible::before { opacity: 1; }
+
+  #inputRow {
+    margin-top: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Courier New', monospace;
+    color: var(--dim);
+    font-size: 0.92rem;
+    transition: color 1.2s ease;
+  }
+  #typedInput {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: 0.92rem;
+    padding: 4px 2px;
+    outline: none;
+    transition: color 1.2s ease, border-color 1.2s ease;
+  }
+  #typedInput:focus { border-bottom-color: var(--accent); }
+
+  #hint {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+    margin-top: 1em;
+    opacity: 0.5;
+    transition: color 1.2s ease;
+  }
+
+  /* REMOVE BEFORE PUBLISHING */
+  #skipBtn { position:fixed; bottom:28px; right:32px; font-family:'Courier New',monospace; font-size:0.72rem; color:var(--dim); background:none; border:1px solid var(--border); padding:4px 10px; cursor:pointer; opacity:0; transition:opacity 0.2s; pointer-events:none; z-index:99; }
+  #skipBtn.visible { opacity:1; pointer-events:auto; }
+  #skipBtn:hover { color:var(--accent); border-color:var(--accent); }
+
+  #restartRow { margin-top: 1.6em; }
+  .restart-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .restart-btn:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: teaser (cozy blue) -->
+<div id="teaserScreen" class="stage-screen proceed-screen">
+  <div id="teaserText"></div>
+  <div id="teaserPrompt">tap to continue</div>
+</div>
+
+<!-- SCREEN 2 (reused): black card -->
+<div id="blackScreen" class="stage-screen proceed-screen">
+  <div id="blackMain"></div>
+  <div id="blackByline"></div>
+  <div id="blackPrompt"></div>
+</div>
+
+<!-- SCREEN 3: Fallout / RobCo terminal -->
+<div id="bootScreen" class="proceed-screen">
+  <div id="bootLines"></div>
+  <div id="bootPrompt">&gt;CLICK ANYWHERE TO PLAY</div>
+</div>
+
+<!-- SCREEN 4: StarCraft / steel-blue HUD -->
+<div id="starcraftScreen" class="proceed-screen">
+  <div class="hud-corner tl"></div>
+  <div class="hud-corner tr"></div>
+  <div class="hud-corner bl"></div>
+  <div class="hud-corner br"></div>
+  <div id="starcraftHeader">TERRAN DOMINION // COMMAND NET</div>
+  <div id="starcraftLines"></div>
+  <div id="starcraftPrompt">CLICK TO CONTINUE</div>
+</div>
+
+<!-- SCREEN 5: Stray / B-12 terminal -->
+<div id="strayScreen" class="stage-screen proceed-screen">
+  <div id="strayGlow"></div>
+  <div id="starField"></div>
+  <div id="strayContent">
+    <div id="strayLinesEl"></div>
+  </div>
+  <div id="strayPrompt"></div>
+</div>
+
+<!-- SCREEN 6: Digital Circus -->
+<div id="circusScreen" class="stage-screen proceed-screen">
+  <div id="circusContent">
+    <div id="circusLinesEl"></div>
+    <div id="circusNameRow">
+      <div id="circusNameHint">&gt; CLICK TO NAME YOURSELF</div>
+      <div id="circusNameForm">
+        <input id="circusNameInput" type="text" autocomplete="off" spellcheck="false" placeholder="type your name...">
+        <button id="circusNameBtn" type="button">OKAY!</button>
+      </div>
+    </div>
+    <div id="circusPrompt"></div>
+  </div>
+</div>
+
+<div id="frame"></div>
+<!-- REMOVE BEFORE PUBLISHING --><button id="skipBtn" onclick="if(skipTyping)skipTyping()">skip ›</button>
+
+<div id="console">
+  <div id="scrollArea">
+    <div id="log"></div>
+    <div id="choices"></div>
+    <div id="inputRow" style="display:none;">
+      <span>&gt;</span>
+      <input id="typedInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a number or keyword, then enter">
+    </div>
+    <div id="hint">click a choice above, or type its number and press enter</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT ZONE 0A: TEASER LINES (cozy blue screen)
+   ============================================================ */
+  const TEASER_LINES = [
+    "This is a story",
+    "a story about choice"
+  ];
+
+/* ============================================================
+   EDIT ZONE 0B: BLACK CARDS
+   "next" tells the engine which themed screen to go to
+   afterward: 'boot', 'starcraft', 'stray', 'circus', or 'story'
+   (goes straight into the console). "byline" and "prompt" are
+   optional; only the final card uses them here.
+   ============================================================ */
+  const BLACK_STEPS = [
+    { text: "choices about survival", next: "boot" },
+    { text: "choices about loyalty and evolution", next: "starcraft" },
+    { text: "choices about freedom", next: "stray" },
+    { text: "a story about finding comfort in an ordinary life", next: "circus" },
+    { text: "a story for you", byline: "by lucyna corley", prompt: "click anywhere to begin", next: "story" }
+  ];
+
+/* ============================================================
+   EDIT ZONE 0C: FALLOUT / ROBCO BOOT TEXT
+   An empty string "" prints as a blank line.
+   ============================================================ */
+  const BOOT_TEXT = [
+    "ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL",
+    "COPYRIGHT 2075-2077 ROBCO INDUSTRIES",
+    "-Server 1-",
+    "",
+    ">RUNNING DIAGNOSTIC.EXE",
+    ">CHECKING MEMORY.............OK",
+    ">MOUNTING STORY.DAT..........OK",
+    ">CALIBRATING TERMLINK........OK",
+    "",
+    ">ALL SYSTEMS NOMINAL"
+  ];
+
+/* ============================================================
+   EDIT ZONE 0D: STARCRAFT HUD TEXT
+   ============================================================ */
+  const STARCRAFT_TEXT = [
+    "ESTABLISHING SECURE UPLINK...",
+    "AUTHENTICATING COMMANDER CREDENTIALS...OK",
+    "SQUAD STATUS.......STANDBY",
+    "EVOLUTION PROTOCOL.....ENGAGED",
+    "",
+    "AWAITING YOUR ORDERS, COMMANDER"
+  ];
+
+/* ============================================================
+   EDIT ZONE 0E: STRAY SCREEN LINES
+   Each entry is either a plain string (rare here) or an object:
+   { type: 'header' | 'sys' | 'narrative' | 'blank', text }
+   - header: the big title line
+   - sys: monospace system-log style ("> LIKE THIS")
+   - narrative: the softer story lines, centered
+   - blank: an empty line, no text needed
+   Use \n inside "text" for a line break within one entry.
+   ============================================================ */
+  const STRAY_LINES = [
+    { type: 'header', text: 'CITY NETWORK // SYSTEM WAKE' },
+    { type: 'blank' },
+    { type: 'sys', text: '> BOOTING...' },
+    { type: 'sys', text: '> MEMORY CORE.............. DAMAGED' },
+    { type: 'sys', text: '> COMPANION UNIT........... B-12' },
+    { type: 'sys', text: '> SYSTEM STATUS............ ONLINE' },
+    { type: 'blank' },
+    { type: 'narrative', text: 'A city beneath the earth,\nwaiting for the stars.' },
+    { type: 'blank' },
+    { type: 'narrative', text: 'No one had seen the Outside\nin a very long time.' },
+    { type: 'blank' },
+    { type: 'narrative', text: 'Then, one day, a cat fell in.' },
+    { type: 'blank' },
+    { type: 'sys', text: '> B-12 ONLINE' },
+    { type: 'sys', text: '> MEMORY ACCESS............ RESTORING' }
+  ];
+  const STRAY_PROMPT_TEXT = "PRESS LEFT CLICK TO MEOW";
+
+/* ============================================================
+   EDIT ZONE 0F: CIRCUS SCREEN LINES
+   Plain strings, typed out in order. Use \n for a line break
+   within one entry, or "" for a blank line/pause.
+   ============================================================ */
+  const CIRCUS_LINES = [
+    "WELCOME TO THE AMAZING DIGITAL CIRCUS!!",
+    "",
+    "HELLO THERE, MY MAGNIFICENT MEOWING MILKMAID",
+    "",
+    "YOU'VE ARRIVED JUST IN TIME!",
+    "",
+    "I'D EXPLAIN WHAT'S GOING ON,\nBUT THAT WOULD TAKE ALL THE FUN OUT OF IT!",
+    "",
+    "SO LET'S JUST SAY...",
+    "",
+    "YOU'RE HERE NOW!",
+    "",
+    "...and you have absolutely no say in the matter!",
+    "",
+    "WHAT'S YOUR NAME?"
+  ];
+
+/* ============================================================
+   EDIT ZONE 7: THE STORY
+   ------------------------------------------------------------
+   Each entry in STORY is one "node" (a moment in the story).
+
+   nodeId: {
+     theme: { bg, text, accent, choice, dim, border },  // optional
+     text: "The passage text that prints out.",
+     choices: [
+       { label: "What she sees as the option", goto: "nextNodeId" },
+       { label: "Another option",              goto: "otherNodeId" }
+     ]
+   }
+
+   - "theme" is OPTIONAL. Leave it off and the node uses the default
+     cozy-blue palette from :root.
+   - Use \n\n for paragraph breaks inside text.
+   - No choices (or empty array) = an ending node.
+   - START_NODE is the first node shown.
+   ============================================================ */
+
+  const START_NODE = "start";
+
+  const STORY = {
+    start: {
+      text: "Hey beautiful. Welcome.\nI've written a lot of stories in the past, and will continue in the future, but for this little project, I decided to go into a different direction.. You know I love you, right?",
+      choices: [
+        { label: "Yes", goto: "yes_path" },
+        { label: "No",  goto: "no_path"  }
+      ]
+    },
+
+    yes_path: {
+      intro: { text: "good girl" },
+      text: "And I will, forever and always, I can't believe 8 months passed so quickly, it both feels like a week and a lifetime, I can't believe how fast we got here, how safe it all feels, just how beautiful every evening spent with you and how much it means to me.\n\nChoices, I know how much you love making them, hehe.\n\nAnd so, without further ado, are you ready to start the adventure?",
+      choices: [
+        { label: "Ready.",    goto: "tavern_intro" },
+        { label: "Not yet.", goto: "not_yet"      }
+      ]
+    },
+
+    no_path: {
+      text: "Oh? Didn't I show it enough? Well I do, and I will, forever and always, I can't believe 8 months passed so quickly, it both feels like a week and a lifetime, I can't believe how fast we got here, how safe it all feels, just how beautiful every evening spent with you and how much it means to me.\n\nChoices, I know how much you love making them, hehe.\n\nAnd so, without further ado, are you ready to start the adventure?",
+      choices: [
+        { label: "Ready.",    goto: "tavern_intro" },
+        { label: "Not yet.", goto: "not_yet"      }
+      ]
+    },
+
+    not_yet: {
+      text: "Oh? Taking your time, I see? Well click ready whenever you feel ready to take on this spOwOky lil adventure",
+      choices: [
+        { label: "Ready.", goto: "tavern_intro" }
+      ]
+    },
+
+    tavern_intro: {
+      text: "You wake with your cheek pressed against a wooden table, the smell of a nearby fire warming you up, you're confused for a second given the unfamiliar clothes you're wearing. For a few seconds, you stay where you are and listen to the rain striking the windows, background chatter of voices, and an occasional crack of burning wood from the fireplace, you recognise one of the voices but aren't sure from where. When you finally lift your head, you find yourself sitting in a tavern, very old, fantastical and wooden like straight out of someone's imagination.\n\nThe room is built almost entirely from dark wood, with thick beams crossing the ceiling and the long tables worn smooth by years of use, with little words scratched into the top. Lanterns hang from iron chains overhead, flames burning a faint blueish purple instead of the warm orange you are familiar with, while small candles line the floor, shouldn't this be a fire hazard? The round, hobbit looking windows are fogged around the edges, and beyond them the night is little more than rain and darkness, with the vague outline of a village visible whenever lightning flashes in the distance.\n\nA handful of strangers sit around the room, drinking and talking quietly. One of them has a pair of long, thin horns rising from her head, another is asleep beside the fireplace with a sword resting against his chair, and something small and furry has curled itself beneath one of the tables, though humanoid with sharp, long fangs. None of them seem interested in the fact that you're sitting here, watching them closely.\n\nBehind the bar, a woman with dark hair is polishing a glass. Her purple and black spiked nose piercing shines against the overhead lantern and her huge smirk suggests she knows a lot more about your situation than you do. When she sets the glass aside, you notice a tiny heart tattooed around her ring finger, along with some others decorating her hand.\n\n\"Hey, you. You're finally awake. You tried to cross the border, right?\"\n\nHer smile widens considerably.\n\n\"Hehe I'm sorry, I couldn't help myself.\"\n\nShe reaches beneath the counter and places three objects on the table in front of you: a black cursed looking dagger with a raven carved into the blade, a purple pale crystal that lights up when you touch it, and a black bracelet made of volcanic rock pieces decorated with small charms shaped like animals.\n\n\"You'll need one of these, ThingOne.\"\n\nYou look at them. The charismatic woman places her hand beside the dagger first.\n\n\"Those who choose the shadows tend to survive by being the first to strike and gone by the time anyone would have noticed. This one will let you become part of the darkness itself, kinda like that radio demon.\"\n\nShe moves to the crystal.\n\n\"This one belongs to the mages of Tamriel. It won't throw fireballs or call down lightning. However, you'll learn how to bend what other people see, hear, and believe, every doorway can become a wall, every post a monster to put fear into those you face. You can make people see exactly what you want them to.\"\n\nFinally, she rests her fingers on the bracelet.\n\n\"And this one is for someone who doesn't intend to fight alone. The creatures of this world will hear you when you call. Wolves, ravens, cats, dogs and the occasional Deathclaw will come when you need it most.\"\n\nA small leather book appears in her hands and you get a better look at the strange symbols inked on her hand.\n\n\"Oki doki, girly, sign here and choose your favour.\"\n\nHEART\nYour courage, your connection to others, and the strength and health boost you find when someone else needs you.\n\nMIND\nYour understanding of the strange things around you and your ability to see what others might miss, puzzles become available to solve.\n\nINSTINCT\nYour reflexes, awareness, and ability to act when there isn't enough time to think about it.\n\nThe woman glances up from the book.\n\n\"Don't worry, you won't have to remember any of that. I'll be here. You can call me whatever you like, just say 'Follow me. I need your help.'\"",
+      choices: [
+        { label: "Follow me. I need your help.", goto: "follow_end" }
+      ]
+    },
+
+    follow_end: {
+      text: "\"Lead the way. Whenever you're ready, choose.\"\n\n~ Take the dagger, Shadowborn assassin ~\nHeart: 2\nMind: 2\nInstinct: 5*\nPower:\nYou can dissolve into darkness, move as shadows, and move unseen.\n\n~ Take the crystal, Illusion Mage ~\nHeart: 3\nMind: 5\nInstinct: 1\nPower:\nYou can blur reality around others, casting Illusions.\n\n~ Take the bracelet, Beast Warrior ~\nHeart: 5\nMind: 2\nInstinct: 2\nPower:\nAnimals can hear you when you call, and might aid you in combat or when stuck.\n\n\"No rush, take your time.\"\nShe smiles down at you.",
+      choices: [
+        { label: "Take the dagger, Shadowborn assassin", goto: "class_dagger" },
+        { label: "Take the crystal, Illusion Mage",      goto: "class_crystal"  },
+        { label: "Take the bracelet, Beast Warrior",     goto: "class_bracelet" }
+      ]
+    },
+
+    class_dagger: {
+      onEnter: () => { playerClass = 'assassin'; },
+      text: "The woman watches you take your dagger and gives an approving nod.\n\n\"Smart, careful approach.\"\n\nShe closes the little book and tucks it beneath the counter after collecting your signature, then grabs a cloak from behind her and throws it over her shoulders.\n\n\"Let's go, little adventurer. Whatever woke up in that tower isn't going to investigate itself.\"\n\nShe steps around the bar and pauses beside you. Up close, you notice her stature and the little heart tattoo around her ring finger again, half hidden beneath the rest of the ink on her hand.",
+      choices: [
+        { label: "Follow her outside.", goto: "village_gate" },
+        { label: "Ask what is in the tower.", goto: "tower_explanation" },
+        { label: "Ask who she is.", goto: "companion_intro" }
+      ]
+    },
+
+    class_crystal: {
+      onEnter: () => { playerClass = 'mage'; },
+      text: "The woman watches you take your crystal and gives an approving nod.\n\n\"Oh, didn't take you for a mage.\"\n\nShe closes the little book and tucks it beneath the counter after collecting your signature, then grabs a cloak from behind her and throws it over her shoulders.\n\n\"Let's go, little adventurer. Whatever woke up in that tower isn't going to investigate itself.\"\n\nShe steps around the bar and pauses beside you. Up close, you notice her stature and the little heart tattoo around her ring finger again, half hidden beneath the rest of the ink on her hand.",
+      choices: [
+        { label: "Follow her outside.", goto: "village_gate" },
+        { label: "Ask what is in the tower.", goto: "tower_explanation" },
+        { label: "Ask who she is.", goto: "companion_intro" }
+      ]
+    },
+
+    class_bracelet: {
+      onEnter: () => { playerClass = 'warrior'; },
+      text: "The woman watches you take your bracelet and gives an approving nod.\n\n\"Makes sense, animal lover.\"\n\nShe closes the little book and tucks it beneath the counter after collecting your signature, then grabs a cloak from behind her and throws it over her shoulders.\n\n\"Let's go, little adventurer. Whatever woke up in that tower isn't going to investigate itself.\"\n\nShe steps around the bar and pauses beside you. Up close, you notice her stature and the little heart tattoo around her ring finger again, half hidden beneath the rest of the ink on her hand.",
+      choices: [
+        { label: "Follow her outside.", goto: "village_gate" },
+        { label: "Ask what is in the tower.", goto: "tower_explanation" },
+        { label: "Ask who she is.", goto: "companion_intro" }
+      ]
+    },
+
+    tower_explanation: {
+      text: "She gives you a sideways smirk.\n\n\"If I knew what was in there, I probably wouldn't need you, would I?\"\n\nShe pulls her cloak tighter and heads for the door.\n\n\"We'll find out when we get there.\"",
+      choices: [ { label: "Continue.", goto: "village_gate" } ]
+    },
+
+    companion_intro: {
+      text: "She giggles softly.\n\n\"Oh, you'll remember eventually, don't worry.\"\n\nShe opens the tavern door and gestures for you to follow.\n\n\"For now, just call me when you need me, and I'll take care of you.\"",
+      choices: [ { label: "Continue.", goto: "village_gate" } ]
+    },
+
+    village_gate: {
+      text: "The rain has faded to a veil of fog by the time you're set up to leave the tavern. The village is quiet, with warm lights glowing through crooked windows and small blue flames floating above the street. At the edge of the village, the road splits into three directions: one leading through a dark forest, one climbing toward the distant hills, and one following the river toward the old watchtower.",
+      choices: [
+        { label: "Take the forest road.", goto: "road_result" },
+        { label: "Follow the river.", goto: "river_result" },
+        { label: "Head toward the hills.", goto: "hill_result" }
+      ]
+    },
+
+    road_result: {
+      text: "The forest swallows the road almost immediately, the trees growing so densly that their branches brush against your shoulders. Your companion ducks under a branch, holding it up for you to pass underneath more easily. A fox watches you from between the roots of an old oak before slipping deeper into the woods.",
+      choices: [ { label: "Continue.", goto: "crossroads" } ]
+    },
+
+    river_result: {
+      text: "The river is louder than it looked from the village, rushing over dark stones as the road follows its banks. Halfway there, you spot something moving beneath the surface, keeping pace with you from the other side. Your companion noticed too and shoots you an aware glance.",
+      choices: [ { label: "Continue.", goto: "crossroads" } ]
+    },
+
+    hill_result: {
+      text: "The climb is much steeper than expected, but your companion holds down a hand for you to grab during a slippy rock formation. From the top you can see the whole valley below, the watchtower stands above the trees in the distance, its highest window glowing eerily purple despite the daylight.",
+      choices: [ { label: "Continue.", goto: "crossroads" } ]
+    },
+
+    crossroads: {
+      text: "Your companion catches up and studies the tower in the distance.\n\n\"We're close.\"\n\nBefore you can ask anything else, a low growl comes from the trees behind you. Something is following.",
+      choices: [
+        { label: "Turn and face it.", goto: "creature_encounter" },
+        { label: "Keep walking.", goto: "creature_follow" },
+        { label: "Hide and wait.", goto: "creature_hide" }
+      ]
+    },
+
+    creature_encounter: {
+      text: "You turn just in time to see a pair of glowing eyes between the trees. The creature doesn't attack, yet, it stalks. It watches you, ears lowered, before disappearing into the brush.",
+      choices: [ { label: "Continue.", goto: "companion_moment_1" } ]
+    },
+
+    creature_follow: {
+      text: "You keep walking, pretending not to notice the light footsteps behind you. After a minute, they stop. When you glance back, there is nothing there except a few fresh pawprints in the mud.",
+      choices: [ { label: "Continue.", goto: "companion_moment_1" } ]
+    },
+
+    creature_hide: {
+      text: "You slip behind a tree and wait. Your companion joins you without a word, and together you watch a large black wolf pass through the clearing before vanishing into the forest.",
+      choices: [ { label: "Continue.", goto: "companion_moment_1" } ]
+    },
+
+    companion_moment_1: {
+      text: "Your companion watches the forest for a moment longer, then looks at you with a small smile.\n\n\"Interesting. We'll probably meet it later.\"",
+      choices: [ { label: "Continue.", goto: "bridge_event" } ]
+    },
+
+    bridge_event: {
+      text: "A broken stone bridge blocks the road ahead, leaving a fast stream between you and the tower. Your companion looks across the water, then at you.\n\n\"Well, this is an inconvenient way to drag out the plot.\"",
+      choices: [
+        { label: "Find another route.", goto: "bridge_search" },
+        { label: "Try to cross the broken bridge.", goto: "bridge_cross" },
+        { label: "Use your power.", goto: "bridge_power" }
+      ]
+    },
+
+    bridge_search: {
+      text: "You follow the stream for a few minutes and find an old fallen tree wide enough to cross. Your companion tests it with one foot, shrugs, and walks across with ease. You follow.",
+      choices: [ { label: "Continue.", goto: "tower_path" } ]
+    },
+
+    bridge_cross: {
+      text: "The bridge shifts beneath your weight as you cross, but you make it to the other side without falling into the water. Your companion follows, and jumps the gap at the end as rocks start breaking off.",
+      choices: [ { label: "Continue.", goto: "tower_path" } ]
+    },
+
+    bridge_power: {
+      text: () => {
+        if (playerClass === 'assassin') return "You dissolve into a shadow and slip through the gaps in the ruined stone, emerging safely on the other side. Your companions rolls her eyes, smirks impressed and jumps the gap, nearly dropping down.";
+        if (playerClass === 'mage') return "You twist the air with an illusion, making the missing sections of the bridge appear solid long enough to cross. You both walk across, though your companion looks worried to step on them.";
+        return "A wild, red wolf emerges from the trees and tests the steps to show the most safe path, waiting on the other side you until you both reach the other side.";
+      },
+      choices: [ { label: "Continue.", goto: "tower_path" } ]
+    },
+
+    tower_path: {
+      text: "The watchtower is much larger up close, its stone walls covered in moss and glowing runes. A whisper emerges from the rocks. The enormous wooden door has three symbols carved into it: a moon, an eye, and a paw.",
+      choices: [
+        { label: "Touch the moon.", goto: "moon_door" },
+        { label: "Touch the eye.", goto: "eye_door" },
+        { label: "Touch the paw.", goto: "paw_door" }
+      ]
+    },
+
+    moon_door: {
+      text: () => playerClass === 'assassin'
+        ? "The moment you touch the moon, the door opens and a cloud of tiny glowing moths spills into the tower."
+        : "The moment you touch the moon, the door shoots out a bolt of electricity, doing a considerable amount of damage to your health.",
+      choices: () => playerClass === 'assassin'
+        ? [ { label: "Continue.", goto: "tower_inside" } ]
+        : [ { label: "Try again.", goto: "tower_path" } ]
+    },
+
+    eye_door: {
+      text: () => playerClass === 'mage'
+        ? "The eye begins to glow and the door opens onto a dark staircase. Somewhere above, you hear a faint laugh."
+        : "The eye stares back at you, unmoving, then burns a flash of light into your vision, doing a considerable amount of damage to your health.",
+      choices: () => playerClass === 'mage'
+        ? [ { label: "Continue.", goto: "tower_inside" } ]
+        : [ { label: "Try again.", goto: "tower_path" } ]
+    },
+
+    paw_door: {
+      text: () => playerClass === 'warrior'
+        ? "The paw glows warmly beneath your hand and the door opens without a sound. A quiet animalistic growl echoes somewhere inside."
+        : "The paw stays cold beneath your hand, then snaps forward with unseen jaws, doing a considerable amount of damage to your health.",
+      choices: () => playerClass === 'warrior'
+        ? [ { label: "Continue.", goto: "tower_inside" } ]
+        : [ { label: "Try again.", goto: "tower_path" } ]
+    },
+
+    tower_inside: {
+      text: "The inside of the tower is much colder than the forest outside and smells of adventure. The staircase winds upward around a hollow center, and halfway up you hear metal scraping against stone below you.",
+      choices: [
+        { label: "Look over the railing.", goto: "armor_encounter" },
+        { label: "Keep climbing.", goto: "armor_encounter" },
+        { label: "Ask your companion what she thinks.", goto: "armor_encounter" }
+      ]
+    },
+
+    armor_encounter: {
+      text: "An empty suit of armour steps from the darkness below, dragging a massive sword behind it. It raises its head and begins climbing toward you.",
+      choices: [
+        { label: "Attack first.", goto: "armor_fight" },
+        { label: "Wait for it.", goto: "armor_wait" },
+        { label: "Let your companion handle it.", goto: "armor_companion" }
+      ]
+    },
+
+    armor_fight: {
+      text: "You strike first, catching the armour off guard. It staggers backward and slams into the wall. +50xp",
+      choices: [ { label: "Continue.", goto: "tower_chamber" } ]
+    },
+
+    armor_wait: {
+      text: "You hold your ground until the armour swings, giving you an opening to counterattack. +50xp",
+      choices: [ { label: "Continue.", goto: "tower_chamber" } ]
+    },
+
+    armor_companion: {
+      text: "Your companion steps in front of you with a grin.\n\n\"I gotchu.\"\n\nShe meets the armour head on while you look for an opening, but before you know it, she bashes it to pieces with one hit.",
+      choices: [ { label: "Continue.", goto: "tower_chamber" } ]
+    },
+
+    tower_chamber: {
+      text: "At the top of the tower, you find a circular chamber filled with a bright purple light. In the centre lies a huge spectral wolf, bound by glowing chains. It looks at you exhausted.",
+      choices: [
+        { label: "Approach the wolf.", goto: "wolf_approach" },
+        { label: "Examine the chains.", goto: "wolf_chains" },
+        { label: "Ask your companion.", goto: "wolf_companion" }
+      ]
+    },
+
+    wolf_approach: {
+      text: "The wolf lowers its head as you approach, allowing you to place a hand against its fur. Its body feels warm despite the ghostly light surrounding it.",
+      choices: [ { label: "Continue.", goto: "wolf_release" } ]
+    },
+
+    wolf_chains: {
+      text: "The chains are old magic, but they're weakening. Whatever trapped the wolf here hasn't been taking good care of it for years.",
+      choices: [ { label: "Continue.", goto: "wolf_release" } ]
+    },
+
+    wolf_companion: {
+      text: "Your companion crouches beside you and watches the creature carefully.\n\n\"It's not guarding this place.\"\n\nShe looks at you.\n\n\"I think It's trapped.\"",
+      choices: [ { label: "Continue.", goto: "wolf_release" } ]
+    },
+
+    wolf_release: {
+      text: "The chains begin to crack, and the entire tower trembles. Your companion looks at you. \"Well, I suppose we should do something about that.\"",
+      choices: [
+        { label: "Break the chains.", goto: "ending" },
+        { label: "Calm the wolf.", goto: "ending" },
+        { label: "Ask your companion for help.", goto: "ending" }
+      ]
+    },
+
+    ending: {
+      text: "The final chain breaks and the wolf rises, filling the chamber with silver light. For a moment it stands before you, enormous and silent, then lowers its head before disappearing into the forest below.\n\nYour companion watches the empty doorway and smiles.\n\n\"Not bad for a first adventure. Come on, I know a tavern where they serve something much better than whatever you woke up drinking.\"",
+      choices: [ { label: "Continue.", goto: "final_note" } ]
+    },
+
+    final_note: {
+      text: "I hope you enjoyed this little text adventure, my sweet sweet angel. I love you so much <3\n\n(The companion was me, hehe) and no matter the outcome, you know I was there to help you with all your choices, just like in real life, I'm happy to make choices for you or support you with the ones you make, and together we can solve literally anything. Mwah, happy 8 months, my angel!<3",
+      choices: []
+    }
+  };
+
+  const SHOW_REAL_NOTE = false;
+  const REAL_NOTE = "Write your real note here.";
+
+/* ============================================================
+   Engine — no need to edit below this line.
+   ============================================================ */
+
+  const teaserScreen   = document.getElementById('teaserScreen');
+  const teaserText     = document.getElementById('teaserText');
+
+  const blackScreen    = document.getElementById('blackScreen');
+  const blackMain      = document.getElementById('blackMain');
+  const blackByline    = document.getElementById('blackByline');
+  const blackPrompt    = document.getElementById('blackPrompt');
+
+  const bootScreen     = document.getElementById('bootScreen');
+  const bootLinesEl    = document.getElementById('bootLines');
+  const bootPrompt     = document.getElementById('bootPrompt');
+
+  const starcraftScreen = document.getElementById('starcraftScreen');
+  const starcraftLines  = document.getElementById('starcraftLines');
+  const starcraftPrompt = document.getElementById('starcraftPrompt');
+
+  const strayScreen    = document.getElementById('strayScreen');
+  const strayLinesEl   = document.getElementById('strayLinesEl');
+  const strayPrompt    = document.getElementById('strayPrompt');
+  const starField      = document.getElementById('starField');
+
+  const circusScreen    = document.getElementById('circusScreen');
+  const circusLinesEl   = document.getElementById('circusLinesEl');
+  const circusNameRow   = document.getElementById('circusNameRow');
+  const circusNameInput = document.getElementById('circusNameInput');
+  const circusNameBtn   = document.getElementById('circusNameBtn');
+  const circusPrompt    = document.getElementById('circusPrompt');
+
+  const consoleEl      = document.getElementById('console');
+  const log            = document.getElementById('log');
+  const choicesEl      = document.getElementById('choices');
+  const inputRow       = document.getElementById('inputRow');
+  const typedInput     = document.getElementById('typedInput');
+  const scrollArea     = document.getElementById('scrollArea');
+
+  let typing       = false;
+  let passageCount = 0;
+  let skipTyping   = null; // PREVIEW ONLY — remove with the skip line below
+  let teaserIndex  = 0;
+  let starsBuilt   = false;
+  let locked       = false;
+  let circusReady  = false;
+  let zCounter     = 100;
+  let playerClass  = null; // 'assassin' | 'mage' | 'warrior' — set when she picks dagger/crystal/bracelet
+
+  function lockFor(ms) { locked = true; setTimeout(() => { locked = false; }, ms); }
+  function front(el) { zCounter += 1; el.style.zIndex = zCounter; }
+
+  function transitionTo(fromEl, toEl, ms, displayVal, cb) {
+    fromEl.classList.remove('active');
+    fromEl.classList.add('fade-out');
+    setTimeout(() => {
+      fromEl.style.display = 'none';
+      fromEl.classList.remove('fade-out');
+      toEl.style.display = displayVal;
+      front(toEl);
+      requestAnimationFrame(() => toEl.classList.add('active'));
+      if (cb) cb();
+    }, ms);
+  }
+
+  // ── Theming (main story palette) ────────────────────────────
+  const rootStyle = document.documentElement.style;
+  const computed  = getComputedStyle(document.documentElement);
+  const DEFAULT_THEME = {
+    bg:     computed.getPropertyValue('--bg').trim(),
+    text:   computed.getPropertyValue('--text').trim(),
+    accent: computed.getPropertyValue('--accent').trim(),
+    choice: computed.getPropertyValue('--choice').trim(),
+    dim:    computed.getPropertyValue('--dim').trim(),
+    border: computed.getPropertyValue('--border').trim()
+  };
+  function applyTheme(theme) {
+    const t = Object.assign({}, DEFAULT_THEME, theme || {});
+    rootStyle.setProperty('--bg', t.bg);
+    rootStyle.setProperty('--text', t.text);
+    rootStyle.setProperty('--accent', t.accent);
+    rootStyle.setProperty('--choice', t.choice);
+    rootStyle.setProperty('--dim', t.dim);
+    rootStyle.setProperty('--border', t.border);
+  }
+
+  // ── Generic typewriter for terminal-style screens ───────────
+  // lines can be plain strings, or (for Stray) objects like
+  // { type: 'sys'|'header'|'narrative'|'blank', text }.
+  // onComplete runs once every line has finished typing.
+  function typeLines(containerEl, lines, onComplete) {
+    let i = 0;
+    function step() {
+      if (i >= lines.length) {
+        if (onComplete) onComplete();
+        return;
+      }
+      const item   = lines[i];
+      const isObj  = typeof item === 'object' && item !== null;
+      const type   = isObj ? item.type : null;
+      const text   = isObj ? item.text : item;
+
+      if (type === 'blank' || text === '') {
+        const blankEl = document.createElement('div');
+        blankEl.className = 'typed-line';
+        blankEl.innerHTML = '&nbsp;';
+        containerEl.appendChild(blankEl);
+        i++;
+        setTimeout(step, 140);
+        return;
+      }
+
+      const lineEl = document.createElement('div');
+      lineEl.className = 'typed-line' + (type ? (' ' + type + '-line') : '');
+      containerEl.appendChild(lineEl);
+
+      let c = 0;
+      (function charStep() {
+        if (c < text.length) {
+          lineEl.textContent += text[c];
+          c++;
+          setTimeout(charStep, 10 + Math.random() * 16);
+        } else {
+          i++;
+          setTimeout(step, 160 + Math.random() * 140);
+        }
+      })();
+    }
+    step();
+  }
+
+  // ── SCREEN 1: teaser ─────────────────────────────────────────
+  teaserText.textContent = TEASER_LINES[0];
+  front(teaserScreen);
+  teaserScreen.style.display = 'flex';
+  requestAnimationFrame(() => teaserScreen.classList.add('active'));
+
+  function advanceTeaser() {
+    if (locked) return;
+    if (teaserIndex < TEASER_LINES.length - 1) {
+      lockFor(2600);
+      teaserText.classList.add('fade');
+      setTimeout(() => {
+        teaserIndex++;
+        teaserText.textContent = TEASER_LINES[teaserIndex];
+        requestAnimationFrame(() => teaserText.classList.remove('fade'));
+      }, 1100);
+    } else {
+      lockFor(1200);
+      enterBlack(0, teaserScreen);
+    }
+  }
+  teaserScreen.addEventListener('click', advanceTeaser);
+
+  // ── SCREEN 2 (reused): black card ───────────────────────────
+  function enterBlack(index, fromEl) {
+    const step = BLACK_STEPS[index];
+    blackMain.textContent = step.text;
+    if (step.byline) {
+      blackByline.textContent = step.byline;
+      blackByline.style.display = 'block';
+    } else {
+      blackByline.style.display = 'none';
+    }
+    blackPrompt.textContent = step.prompt || 'tap to continue';
+    blackScreen.dataset.next = step.next;
+    transitionTo(fromEl, blackScreen, 1100, 'flex');
+  }
+
+  function handleBlackClick() {
+    if (locked) return;
+    const next = blackScreen.dataset.next;
+    if (next === 'boot') {
+      lockFor(1000);
+      transitionTo(blackScreen, bootScreen, 900, 'block', () => typeLines(bootLinesEl, BOOT_TEXT, () => {
+        setTimeout(() => bootPrompt.classList.add('show'), 450);
+      }));
+    } else if (next === 'starcraft') {
+      lockFor(1000);
+      transitionTo(blackScreen, starcraftScreen, 900, 'flex', () => typeLines(starcraftLines, STARCRAFT_TEXT, () => {
+        setTimeout(() => starcraftPrompt.classList.add('show'), 450);
+      }));
+    } else if (next === 'stray') {
+      lockFor(1300);
+      transitionTo(blackScreen, strayScreen, 1200, 'flex', () => {
+        if (!starsBuilt) { buildStars(); starsBuilt = true; }
+        typeLines(strayLinesEl, STRAY_LINES, () => {
+          strayPrompt.textContent = STRAY_PROMPT_TEXT;
+          setTimeout(() => strayPrompt.classList.add('show'), 450);
+        });
+      });
+    } else if (next === 'circus') {
+      lockFor(1100);
+      transitionTo(blackScreen, circusScreen, 1000, 'flex', () => {
+        typeLines(circusLinesEl, CIRCUS_LINES, () => {
+          circusNameRow.style.display = 'flex';
+          circusNameInput.value = '';
+          circusNameInput.focus();
+        });
+      });
+    } else if (next === 'story') {
+      lockFor(1300);
+      blackScreen.classList.remove('active');
+      blackScreen.classList.add('fade-out');
+      setTimeout(() => {
+        blackScreen.style.display = 'none';
+        consoleEl.classList.add('visible');
+        renderNode(START_NODE);
+      }, 1200);
+    }
+  }
+  blackScreen.addEventListener('click', handleBlackClick);
+
+  // ── SCREEN 3: Fallout / RobCo boot ──────────────────────────
+  bootScreen.addEventListener('click', () => {
+    if (locked) return;
+    lockFor(1000);
+    enterBlack(1, bootScreen);
+  });
+
+  // ── SCREEN 4: StarCraft HUD ──────────────────────────────────
+  starcraftScreen.addEventListener('click', () => {
+    if (locked) return;
+    lockFor(1000);
+    enterBlack(2, starcraftScreen);
+  });
+
+  // ── SCREEN 5: Stray / B-12 terminal ─────────────────────────
+  function buildStars() {
+    const count = 90;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = 1 + Math.random() * 2;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 3) + 's';
+      s.style.animationDuration = (2 + Math.random() * 3) + 's';
+      starField.appendChild(s);
+    }
+  }
+  strayScreen.addEventListener('click', () => {
+    if (locked) return;
+    lockFor(1300);
+    enterBlack(3, strayScreen);
+  });
+
+  // ── SCREEN 6: Digital Circus ─────────────────────────────────
+  function submitCircusName() {
+    circusNameRow.style.display = 'none';
+
+    const lineEl = document.createElement('div');
+    lineEl.className = 'typed-line';
+    circusLinesEl.appendChild(lineEl);
+    // No matter what she types, she doesn't get to pick her own name
+    // in here — Caine already has other plans.
+    const text = 'PERFECT. NICE TO MEET YOU, THING ONE!';
+    let c = 0;
+    (function charStep() {
+      if (c < text.length) {
+        lineEl.textContent += text[c];
+        c++;
+        setTimeout(charStep, 10 + Math.random() * 16);
+      } else {
+        circusReady = true;
+        circusPrompt.textContent = 'CLICK TO CONTINUE';
+        setTimeout(() => circusPrompt.classList.add('show'), 450);
+      }
+    })();
+  }
+  circusNameBtn.addEventListener('click', (e) => { e.stopPropagation(); submitCircusName(); });
+  circusNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitCircusName(); });
+  circusNameInput.addEventListener('click', (e) => e.stopPropagation());
+
+  circusScreen.addEventListener('click', () => {
+    if (locked || !circusReady) return;
+    lockFor(1100);
+    enterBlack(4, circusScreen);
+  });
+
+  // ── Keyboard alternative for every screen ───────────────────
+  document.addEventListener('keydown', () => {
+    if (document.activeElement === circusNameInput) return;
+    const activeScreen = document.querySelector('.proceed-screen.active');
+    if (activeScreen) activeScreen.click();
+  });
+
+  // ── Helpers ─────────────────────────────────────────────────
+  function scrollDown() { scrollArea.scrollTop = scrollArea.scrollHeight; }
+
+  function typeText(el, text, onDone) {
+    typing = true;
+    let i = 0;
+    let displayed = '';
+    el.classList.add('typing');
+    document.getElementById('skipBtn').classList.add('visible');
+    skipTyping = () => { el.textContent = text; el.classList.remove('typing'); typing = false; skipTyping = null; document.getElementById('skipBtn').classList.remove('visible'); if (onDone) onDone(); };
+
+    function step() {
+      if (i < text.length) {
+        displayed += text[i];
+        el.textContent = displayed;
+        i++;
+        scrollDown();
+
+        const ch   = text[i - 1];
+        const next = text[i] || '';
+
+        let delay = 50 + Math.random() * 50;
+
+        if (ch === '.')              delay += 280 + Math.random() * 120;
+        if (ch === ',')              delay += 110 + Math.random() * 70;
+        if (ch === '?' || ch === '!') delay += 260 + Math.random() * 100;
+        if (ch === ';' || ch === ':') delay +=  90 + Math.random() * 50;
+        if (ch === '\n')             delay += 320 + Math.random() * 160;
+
+        if (ch === ' ' && next !== ' ') delay -= 20;
+
+        if (Math.random() < 0.04) delay += 200 + Math.random() * 225;
+
+        setTimeout(step, delay);
+      } else {
+        el.classList.remove('typing');
+        typing = false;
+        skipTyping = null;
+        document.getElementById('skipBtn').classList.remove('visible');
+        if (onDone) onDone();
+      }
+    }
+    step();
+  }
+
+  function showContinuePrompt(onContinue) {
+    const prompt = document.createElement('div');
+    prompt.className = 'continue-prompt';
+    prompt.textContent = '· · ·';
+    log.appendChild(prompt);
+    scrollDown();
+
+    setTimeout(() => {
+      prompt.classList.add('fade-out');
+      setTimeout(() => { prompt.remove(); onContinue(); }, 380);
+    }, 900);
+  }
+
+  function addDivider() {
+    const div = document.createElement('div');
+    div.className = 'divider';
+    div.textContent = '· · ·';
+    log.appendChild(div);
+  }
+
+  function renderNode(nodeId) {
+    const node = STORY[nodeId];
+    if (node.onEnter) node.onEnter();
+    applyTheme(node.theme);
+    choicesEl.innerHTML = '';
+    inputRow.style.display = 'none';
+
+    if (passageCount > 0) addDivider();
+    passageCount++;
+
+    // node.text and node.choices can be plain values, or functions that
+    // depend on state (like playerClass) — resolve them once per render.
+    const resolvedText    = typeof node.text === 'function' ? node.text() : node.text;
+    const resolvedChoices = typeof node.choices === 'function' ? node.choices() : node.choices;
+
+    function doMainText() {
+      const p = document.createElement('div');
+      p.className = 'passage';
+      log.appendChild(p);
+
+      typeText(p, resolvedText, () => {
+      const hasChoices = resolvedChoices && resolvedChoices.length > 0;
+
+      showContinuePrompt(() => {
+        if (hasChoices) {
+          resolvedChoices.forEach((choice, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice';
+            btn.textContent = '🐾  ' + choice.label;
+            btn.addEventListener('click', () => selectChoice(choice, node));
+            choicesEl.appendChild(btn);
+            setTimeout(() => btn.classList.add('show'), idx * 140);
+          });
+
+          inputRow.style.display = 'flex';
+          typedInput.value = '';
+          typedInput.focus();
+
+          typedInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              const val = typedInput.value.trim().toLowerCase();
+              let matched = null;
+              const asNum = parseInt(val, 10);
+              if (!isNaN(asNum) && resolvedChoices[asNum - 1]) {
+                matched = resolvedChoices[asNum - 1];
+              } else {
+                matched = resolvedChoices.find(c => c.label.toLowerCase().includes(val));
+              }
+              if (matched) selectChoice(matched, node);
+            }
+          };
+        } else {
+          if (SHOW_REAL_NOTE) {
+            setTimeout(() => {
+              const noteP = document.createElement('div');
+              noteP.className = 'passage';
+              log.appendChild(noteP);
+              typeText(noteP, REAL_NOTE, showRestart);
+            }, 600);
+          } else {
+            showRestart();
+          }
+        }
+        scrollDown();
+      });
+    });
+    } // end doMainText
+
+    if (node.intro) {
+      const introP = document.createElement('div');
+      introP.className = 'passage-small';
+      log.appendChild(introP);
+      typeText(introP, node.intro.text, () => {
+        setTimeout(doMainText, 500);
+      });
+    } else {
+      doMainText();
+    }
+  }
+
+  function showRestart() {
+    const row = document.createElement('div');
+    row.id = 'restartRow';
+    const btn = document.createElement('button');
+    btn.className = 'restart-btn';
+    btn.textContent = 'read again';
+    btn.addEventListener('click', () => {
+      log.innerHTML = '';
+      choicesEl.innerHTML = '';
+      passageCount = 0;
+      playerClass = null;
+      applyTheme(null);
+      renderNode(START_NODE);
+    });
+    row.appendChild(btn);
+    log.appendChild(row);
+    scrollDown();
+  }
+
+  function selectChoice(choice) {
+    if (typing) return;
+    choicesEl.innerHTML = '';
+    inputRow.style.display = 'none';
+    renderNode(choice.goto);
+  }
+
+</script>
+
+</body>
+</html>
