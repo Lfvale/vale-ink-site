@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>moon theme · three chapters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+@property --bg{syntax:'<color>';inherits:true;initial-value:#64666b}
+@property --panel{syntax:'<color>';inherits:true;initial-value:#6e7075}
+@property --mask{syntax:'<color>';inherits:true;initial-value:#6e7075}
+@property --text{syntax:'<color>';inherits:true;initial-value:#f0f0f2}
+@property --dim{syntax:'<color>';inherits:true;initial-value:#c2c4c8}
+@property --accent{syntax:'<color>';inherits:true;initial-value:#d6d8dc}
+@property --rose{syntax:'<color>';inherits:true;initial-value:#cfd1d5}
+@property --border{syntax:'<color>';inherits:true;initial-value:#8a8c91}
+
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+
+body{
+  --bg:#64666b;--panel:#6e7075;--mask:#6e7075;--text:#f0f0f2;--dim:#c2c4c8;--accent:#d6d8dc;--rose:#cfd1d5;--border:#8a8c91;
+  transition:--bg 2.4s,--panel 2.4s,--mask 2.4s,--text 2.4s,--dim 2.4s,--accent 2.4s,--rose 2.4s,--border 2.4s;
+  min-height:100%;background:var(--bg);color:var(--text);
+  font-family:'IM Fell English',Georgia,serif;
+  display:flex;align-items:center;justify-content:center;
+  padding:6vh 5vw;overflow-x:hidden;
+}
+body[data-ch="2"]{--bg:#fbeedd;--panel:rgba(255,248,238,.86);--mask:#fff8ee;--text:#3b2a3f;--dim:#8a6a86;--accent:#e2604f;--rose:#c8477f;--border:#ecc9b0}
+body[data-ch="3"]{--bg:#09060e;--panel:rgba(21,13,34,.88);--mask:#150d22;--text:#e4d9f3;--dim:#9a86b5;--accent:#b48cff;--rose:#d98fc0;--border:#33244b}
+
+.layer{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity 2.4s ease}
+body[data-ch="1"] .l1,body[data-ch="2"] .l2,body[data-ch="3"] .l3{opacity:1}
+.l1{background:radial-gradient(ellipse at 50% 40%,transparent 30%,rgba(30,32,36,.55) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");background-blend-mode:multiply}
+.l2{background:radial-gradient(ellipse at 12% 8%,#ffd2b0 0,transparent 45%),radial-gradient(ellipse at 88% 12%,#bfe3f0 0,transparent 42%),radial-gradient(ellipse at 15% 92%,#cfe8c4 0,transparent 45%),radial-gradient(ellipse at 90% 88%,#f6c4d8 0,transparent 42%)}
+.l3{background:radial-gradient(ellipse at 85% 0%,#2a1646 0,transparent 55%),radial-gradient(ellipse at 8% 95%,rgba(201,135,182,.24),transparent 50%),radial-gradient(ellipse at 55% 105%,rgba(90,190,190,.16),transparent 45%),radial-gradient(ellipse at 100% 62%,rgba(232,198,122,.11),transparent 40%)}
+#stars{position:absolute;inset:0}
+.star{position:absolute;border-radius:50%;background:#d9c9f5;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.1}50%{opacity:.85}}
+
+.sun,.moonbig{position:fixed;top:7vh;right:9vw;width:64px;height:64px;border-radius:50%;pointer-events:none;opacity:0;transition:opacity 2.4s ease}
+.sun{background:radial-gradient(circle,#fff3c4 0,#ffd166 60%,#f6a94a 100%);box-shadow:0 0 50px 14px rgba(255,190,90,.45)}
+.moonbig{box-shadow:-16px 6px 0 0 #d9c9f5,-16px 6px 40px 2px rgba(180,140,255,.32)}
+body[data-ch="2"] .sun,body[data-ch="3"] .moonbig{opacity:1}
+
+.card{position:relative;z-index:1;width:min(640px,100%);padding:44px clamp(24px,6vw,54px) 30px;background:var(--panel);border:1px solid var(--border);outline:1px solid var(--border);outline-offset:7px;border-radius:3px;box-shadow:0 10px 50px -20px rgba(0,0,0,.4)}
+.corner{position:absolute;width:38px;height:38px;color:var(--accent);fill:none;stroke:currentColor;stroke-width:1.1}
+.tl{top:-4px;left:-4px}.tr{top:-4px;right:-4px;transform:scaleX(-1)}.bl{bottom:-4px;left:-4px;transform:scaleY(-1)}.br{bottom:-4px;right:-4px;transform:scale(-1,-1)}
+
+.phases{display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:22px}
+.moon{--o:0%;width:16px;height:16px;border-radius:50%;border:1px solid var(--dim);background:var(--accent);position:relative;overflow:hidden;opacity:.4;transition:opacity .8s,border-color .8s}
+.moon::after{content:"";position:absolute;inset:-1px;border-radius:50%;background:var(--mask);transform:translateX(var(--o))}
+.moon.on{opacity:1;border-color:var(--accent)}
+.cat{width:20px;height:20px;color:var(--rose);fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.6);transition:opacity 1.1s ease,transform 1.1s ease}
+body[data-ch="3"] .cat{opacity:1;transform:scale(1)}
+.cat.r{transform:scaleX(-1) scale(.6)}
+body[data-ch="3"] .cat.r{transform:scaleX(-1) scale(1)}
+
+.kicker{text-align:center;color:var(--dim);font-size:.92rem;letter-spacing:.14em;margin-bottom:10px}
+h1{font-style:italic;font-weight:400;font-size:clamp(1.75rem,5.4vw,2.4rem);letter-spacing:.02em;line-height:1.2;text-align:center}
+.sub{text-align:center;color:var(--dim);font-style:italic;margin-top:8px}
+.divider{display:block;margin:22px auto 24px;width:min(230px,70%);height:20px;color:var(--accent);fill:none;stroke:currentColor;stroke-width:1}
+.divider .fill{fill:currentColor;stroke:none}
+
+.passage{font-size:1.1rem;line-height:1.85;max-width:64ch;min-height:9em}
+.passage p{margin-bottom:1.05em}
+.passage p:last-child{margin-bottom:0}
+.passage.typing p:last-child::after{content:'▍';color:var(--accent);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.kw{color:inherit;transition:color 1.1s ease,text-shadow 1.1s ease}
+.kw.lit{color:var(--accent);text-shadow:0 0 12px currentColor}
+
+.foot{margin-top:22px;padding-top:20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:18px}
+.next{position:relative;text-align:left;font:italic 1.05rem 'IM Fell English',Georgia,serif;color:var(--rose);background:transparent;border:1px solid var(--border);border-radius:2px;padding:12px 18px 12px 42px;cursor:pointer;transition:color .25s,border-color .25s,transform .25s;opacity:0;pointer-events:none}
+.next::before{content:'';position:absolute;left:17px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;box-shadow:-3px 1px 0 0 var(--accent)}
+.next.show{opacity:1;pointer-events:auto}
+.next:hover,.next:focus-visible{outline:none;color:var(--accent);border-color:var(--accent);transform:translateX(6px)}
+.tabs{display:flex;justify-content:center;gap:16px}
+.tab{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;display:grid;place-items:center;transition:color .3s,border-color .3s,box-shadow .3s,opacity .3s}
+.tab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.tab:hover,.tab:focus-visible{outline:none;color:var(--accent);border-color:var(--accent)}
+.tab.on{color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px var(--panel),0 0 0 4px var(--border)}
+.tab.locked{opacity:.3;cursor:default;pointer-events:none}
+.note{text-align:center;color:var(--dim);font-size:.82rem;font-style:italic;margin-top:16px;opacity:.85}
+
+@media (prefers-reduced-motion:reduce){.star{animation:none}body,.layer,.sun,.moonbig,.cat{transition:none}}
+</style>
+</head>
+<body data-ch="1">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="corner" viewBox="0 0 40 40"><path d="M2 38V9Q2 2 9 2H38M8 16V11Q8 8 11 8H16"/><circle cx="16" cy="16" r="1.7" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="cat" viewBox="0 0 32 26"><path d="M6 10 2 3l7 4.2M8 8c5-3 11-3 16 0 3 2 4 5 4 8 0 5-5 9-12 9S4 21 4 16c0-3 1-6 4-8Z"/><circle cx="12" cy="15" r=".6" fill="currentColor" stroke="none"/><circle cx="20" cy="15" r=".6" fill="currentColor" stroke="none"/><path d="M14 18q2 1.4 4 0"/></symbol>
+</svg>
+
+<div class="layer l1"></div>
+<div class="layer l2"></div>
+<div class="layer l3"><div id="stars"></div></div>
+<div class="sun"></div><div class="moonbig"></div>
+
+<main class="card">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
+  <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+
+  <div class="phases" id="phases" aria-hidden="true">
+    <svg class="cat"><use href="#cat"/></svg>
+  </div>
+  <p class="kicker" id="kicker"></p>
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+  <svg class="divider" viewBox="0 0 230 20" aria-hidden="true">
+    <path d="M0 10H88M142 10H230"/>
+    <path class="fill" d="M92 10l4 -4l4 4l-4 4zM130 10l4 -4l4 4l-4 4z"/>
+    <path d="M118 3A7 7 0 1 0 118 17A5.4 5.4 0 1 1 118 3Z" class="fill"/>
+  </svg>
+
+  <div class="passage" id="passage" aria-live="polite"></div>
+
+  <div class="foot">
+    <button class="next" id="next"></button>
+    <nav class="tabs" aria-label="chapters">
+      <button class="tab" aria-label="the grey years" title="the grey years"><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 11a3.5 3.5 0 0 0 1 7z"/></svg></button>
+      <button class="tab" aria-label="colour, again" title="colour, again"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
+      <button class="tab" aria-label="every day with her" title="every day with her"><svg viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/><path d="M17.5 3.5v3M16 5h3"/></svg></button>
+    </nav>
+  </div>
+  <p class="note">for Nyxie</p>
+</main>
+
+<script>
+const C=[
+ {k:'chapter one',t:'the grey years',s:'everything the same soft shade',on:1,next:'and then, i came home',
+  kw:['moon','peace'],
+  p:[`I used to live, day into day, just waiting for the weekend. My days spent working, taking the bike home but making a detour just to sit in some corner or by the street in the grass because "home" was the last place I wanted to be. I'm not even sure you could call it that. I ate what was available, I drank what I was used to, I did what I had to and nothing else. My days off I spent busy doing chores, cleaning, sorting, preparing without a moment to relax and when I did have some time, I'd pick up a book to escape into a different world for a moment, end up disassociating and getting rushed to do what was left before I had to go to bed once more. I spent hours sitting outside in the grass, no matter how cold it got, just to have a moment of peace, id write then, or listen to music while staring at the moon, the one that once helped me "wake up" from despair and hopelessness and gave me a spark and a purpose. I'm not sure how I got trapped like that, but I was certain this was my life now & there's nothing I could do about it, so I accepted it for a long time.`]},
+ {k:'chapter two',t:'colour, again',s:'back in vienna',on:3,next:'and then, her',
+  kw:['colour','alive','bright'],
+  p:[`And just as quick as I had gotten there, I found myself back in Vienna. My mindset didn't entirely change in an instant, but I remember one night on my third day back, after unpacking and catching up with my mum I was outside for a walk, and I walked looking at all the little houses, the vines growing, the slightly annoyed people that live here, the balconies full of plants and little decorations and noticed a minor car accident. A car had hit a tram, full on, thankfully the SUV didn't take much damage, they're stury beasts those north american cars, and a tram is just 35 tonnes of metal sunken into the floor, so nobody was harmed. A bald man got out of the car and yelled at the tram driver, which quickly opened the door, headed out and screamed back at him. "Fucking retard, go drown yourself you bitchass fag" and then, the oddest thing, they hugged in a very masculine, no homo distant one shoulder touching way, apologised, exchanged information and laughed with eachother and I knew. Damn, I'm back. Austrians are weird, expressive and sarcastic folk, quick to piss off, just as quick to calm down and move on. Lovely people, I thought. I used to despise living here, but it's charming I think, there's colour to it, expression, it's full of art and history, old buildings and the world, for once after so long, felt alive again. Accessible, anything felt possible. I smiled and continued my path, looking at the sky, took a deep breath and I noticed the world around me gained saturation, almost like a filter was turned on, life felt easy, my future felt bright and I noticed I could do anything. I smiled and walked home to sleep the best I had in years.`]},
+ {k:'chapter three',t:'every day with her',s:'and sometimes i notice',on:5,next:'begin again',
+  kw:['colour','beautiful','Nyxie','love','home','Forever'],
+  p:[
+   `Now for the reason I'm telling you all of this; see I love adding quirks to my writing, adding lil themes and whatnot to spice it up, but I want to be as candid as possible in this little recalling of a part of my life. I'd felt trapped and came to a very freeing, beautiful realisation that gave me colour again, that free'd my heart of all the darkness, pain and self-induced stagnation and that moment was very very powerful to me. It was one of the strongest emotions I've felt, one of the most beautiful experiences because it, once again, seemed to have saved my life though in a more spiritual way this time.`,
+   `Nyxie, the day that I met you was wonderful, the days that followed where I got to explore your mind and world were even more fantastic and the trust built, the excitement, the familiarity, our little rituals, our laughs and creative times, watching movies, shows, experiencing games, talking so much and sleeping on call with eachother have been the most wonderous, warm and safe moments of my life.`,
+   `Every morning I wake up, life has that same colour it did back then, every evening spent together feels like I could do anything, any time we just have a lil conversation it feels like all my worries melt away and I'm, right now, the free-est I've ever been.`,
+   `The colour that came back to me, with you by my side and our future ahead of us, has been a constant, a fuel of safety and home I hadn't had the chance to experience before. You are the love of my life, my future wife, my one and only and nothing will ever change about that. I love you endlessly, je t'aime a mourir, ich liebe dich so unendlich viel dass ich gar nicht weiß wie ich es dir zeigen kann.`,
+   `Thank you so much for being in my life, being my sweet little one and the (very lesbian clingy kittygirl) girl I can lean on always. I can't wait to build our physical home together & take care of our plush friends and Pip and Luna.`,
+   `I got the strangest feeling this isn't our first time around.`,
+   `Forever and always.`,
+   `Your Lucy`
+  ]}
+];
+
+const $=id=>document.getElementById(id);
+const phases=$('phases'),tabs=[...document.querySelectorAll('.tab')];
+['0%','35%','60%','80%','105%'].forEach(o=>{const m=document.createElement('div');m.className='moon';m.style.setProperty('--o',o);phases.insertBefore(m,phases.firstChild)});
+const catR=document.createElement('svg');catR.className='cat r';catR.innerHTML='<use href="#cat"/>';phases.appendChild(catR);
+const stars=$('stars');
+for(let i=0;i<60;i++){const s=document.createElement('div'),z=1+Math.random()*2;s.className='star';s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${3+Math.random()*3}s`;stars.appendChild(s)}
+
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let cur=0,maxReached=0,typingNow=false;
+const box=$('passage'),nextBtn=$('next');
+
+function light(p,words,used){
+  let html=p.textContent;
+  words.forEach(w=>{
+    if(used.has(w))return;
+    const idx=html.indexOf(w);
+    if(idx>-1){html=html.slice(0,idx)+'<span class="kw">'+w+'</span>'+html.slice(idx+w.length);used.add(w)}
+  });
+  p.innerHTML=html;
+  requestAnimationFrame(()=>{p.querySelectorAll('.kw').forEach((el,i)=>setTimeout(()=>el.classList.add('lit'),i*260+150))});
+}
+
+function typeInto(p,text){
+  return new Promise(res=>{
+    if(reduce){p.textContent=text;res();return}
+    let i=0;
+    (function step(){
+      if(i>=text.length){res();return}
+      const ch=text[i++];
+      p.textContent+=ch;
+      let d=46+Math.random()*50;
+      if(ch==='.'||ch==='!'||ch==='?')d+=300;
+      else if(ch===',')d+=115;
+      else if(ch===';'||ch===':')d+=200;
+      if(Math.random()<0.04)d+=220;
+      setTimeout(step,d);
+    })();
+  });
+}
+
+async function runChapter(n){
+  typingNow=true;
+  const c=C[n];
+  document.body.dataset.ch=n+1;
+  [...phases.querySelectorAll('.moon')].forEach((m,i)=>m.classList.toggle('on',i<c.on));
+  tabs.forEach((t,i)=>t.classList.toggle('on',i===n));
+  $('kicker').textContent=c.k;$('title').textContent=c.t;$('sub').textContent=c.s;
+  nextBtn.classList.remove('show');nextBtn.textContent=c.next;
+  box.innerHTML='';box.classList.add('typing');
+  const used=new Set();
+  for(const para of c.p){
+    const p=document.createElement('p');box.appendChild(p);
+    await typeInto(p,para);
+    light(p,c.kw,used);
+    await new Promise(r=>setTimeout(r,260));
+  }
+  box.classList.remove('typing');
+  typingNow=false;
+  maxReached=Math.max(maxReached,n+1<C.length?n+1:0);
+  tabs.forEach((t,i)=>t.classList.toggle('locked',i>maxReached));
+  nextBtn.classList.add('show');
+}
+
+function goTo(n){
+  if(typingNow)return;
+  if(n>maxReached)return;
+  cur=n;runChapter(n);
+}
+
+nextBtn.onclick=()=>{if(typingNow)return;goTo(cur+1<C.length?cur+1:0)};
+tabs.forEach((t,i)=>t.onclick=()=>goTo(i));
+tabs[0].classList.remove('locked');
+runChapter(0);
+</script>
+</body>
+</html>
